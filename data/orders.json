@@ -1,0 +1,86 @@
+[
+  {
+    "orderId": "order_QmXhhNVpKodsB2",
+    "customerName": "Prince Pokharna",
+    "customerEmail": "prince187p0kharna@gmail.com",
+    "customerPhone": "+917300321540",
+    "orderDate": "2025-06-28",
+    "totalAmount": 1090,
+    "items": [
+      {
+        "name": "Celestial Ring 1",
+        "quantity": 1,
+        "price": 500
+      }
+    ],
+    "shippingAddress": {
+      "address": "1-A-37, R.C. Vyas Colony",
+      "city": "Bhilwara",
+      "state": "Rajasthan",
+      "pincode": "311001"
+    },
+    "paymentId": "pay_QmXj0xjVVOpDC3",
+    "paymentStatus": "completed",
+    "orderStatus": "confirmed",
+    "estimatedDelivery": "Wednesday, 9 July 2025",
+    "notes": "",
+    "createdAt": "2025-06-28T08:03:08.968Z",
+    "updatedAt": "2025-06-28T08:03:08.969Z"
+  },
+  {
+    "orderId": "order_Qo5WUYiYhq5Cjt",
+    "customerName": "Prince Pokharna",
+    "customerEmail": "jsonali0608@gmail.com",
+    "customerPhone": "7728031450",
+    "orderDate": "2025-07-02",
+    "totalAmount": 1090,
+    "items": [
+      {
+        "name": "Celestial Ring 1",
+        "quantity": 1,
+        "price": 500
+      }
+    ],
+    "shippingAddress": {
+      "address": "1-A-37 , R.C. Vyas Colony",
+      "city": "Bhilwara",
+      "state": "RJ",
+      "pincode": "311001"
+    },
+    "paymentId": "pay_Qo5XYFipG9b3zM",
+    "paymentStatus": "completed",
+    "orderStatus": "confirmed",
+    "estimatedDelivery": "Monday, 14 July 2025",
+    "notes": "",
+    "createdAt": "2025-07-02T05:46:49.953Z",
+    "updatedAt": "2025-07-02T05:46:49.953Z"
+  },
+  {
+    "orderId": "order_QofvyD061uvPVu",
+    "customerName": "Prince Pokharna",
+    "customerEmail": "prince187p0kharna@gmail.com",
+    "customerPhone": "+917300321540",
+    "orderDate": "2025-07-03",
+    "totalAmount": 1385,
+    "items": [
+      {
+        "name": "Celestial Ring 1",
+        "quantity": 1,
+        "price": 750
+      }
+    ],
+    "shippingAddress": {
+      "address": "1-A-37, R.C. Vyas Colony",
+      "city": "Bhilwara",
+      "state": "Rajasthan",
+      "pincode": "311001"
+    },
+    "paymentId": "pay_QofxAiFnYoSb1S",
+    "paymentStatus": "completed",
+    "orderStatus": "confirmed",
+    "estimatedDelivery": "Tuesday, 15 July 2025",
+    "notes": "",
+    "createdAt": "2025-07-03T17:23:43.453Z",
+    "updatedAt": "2025-07-03T17:23:43.453Z"
+  }
+]

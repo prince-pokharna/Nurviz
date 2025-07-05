@@ -5,7 +5,17 @@ const fs = require('fs').promises;
 const path = require('path');
 const { initializeDatabase, executeQuery, fetchAll, fetchOne, closeDatabase } = require('../lib/database');
 
-console.log('🔄 Starting enhanced inventory synchronization...');
+console.log('🔄 Starting inventory sync...');
+
+// Check if we're in a serverless environment  
+const isServerless = process.env.VERCEL || process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME;
+
+if (isServerless) {
+  console.log('🌐 Detected serverless environment - skipping inventory sync');
+  console.log('📄 Inventory will be loaded from JSON files');
+  console.log('✅ Inventory sync complete (using JSON fallback)');
+  process.exit(0);
+}
 
 // Configuration
 const EXCEL_FILE = path.join(__dirname, '..', 'Stock-Management-Inventory.xlsx');

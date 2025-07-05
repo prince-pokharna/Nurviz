@@ -3,6 +3,7 @@ import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { OrderData, calculateEstimatedDelivery } from '@/lib/order-management';
 import nodemailer from 'nodemailer';
+import { saveOrder } from '@/lib/database-fallback';
 
 const ORDER_DATA_FILE = join(process.cwd(), 'data', 'orders.json');
 
@@ -211,104 +212,30 @@ Thank you for choosing Nurvi Jewel! ✨`
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const {
-      orderId,
-      customerName,
-      customerEmail,
-      customerPhone,
-      totalAmount,
-      items,
-      shippingAddress,
-      paymentId,
-      paymentStatus
-    } = body;
-
-    console.log('=== Saving Order Data ===');
-    console.log('Order ID:', orderId);
-    console.log('Customer:', customerName);
-    console.log('Email:', customerEmail);
-    console.log('Phone:', customerPhone);
-
-    const orderDate = new Date();
-    const estimatedDelivery = calculateEstimatedDelivery(orderDate);
-
-    const orderData: OrderData = {
-      orderId,
-      customerName,
-      customerEmail,
-      customerPhone,
-      orderDate: orderDate.toISOString().split('T')[0],
-      totalAmount,
-      items,
-      shippingAddress,
-      paymentId,
-      paymentStatus: paymentStatus || 'completed',
-      orderStatus: 'confirmed',
-      estimatedDelivery,
-      notes: '',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    // Read existing orders
-    const existingOrders = readOrders();
+    const orderData = await request.json();
     
-    // Check if order already exists
-    const existingOrderIndex = existingOrders.findIndex(order => order.orderId === orderId);
+    console.log('🔄 Saving order data...');
     
-    if (existingOrderIndex >= 0) {
-      // Update existing order
-      existingOrders[existingOrderIndex] = { ...existingOrders[existingOrderIndex], ...orderData };
-      console.log('✓ Updated existing order');
-    } else {
-      // Add new order
-      existingOrders.push(orderData);
-      console.log('✓ Added new order');
-    }
-
-    // Save updated orders
-    saveOrders(existingOrders);
-
-    // Send notifications
-    console.log('=== Sending Order Confirmation Notifications ===');
+    // Use the fallback database system
+    const savedOrder = await saveOrder(orderData);
     
-    // Send email notification
-    const emailSent = await sendOrderConfirmationEmail(orderData);
-    if (emailSent) {
-      console.log('✅ Order confirmation email sent successfully');
-    } else {
-      console.log('⚠️ Order confirmation email failed or skipped');
-    }
-
-    // Send SMS notification
-    const smsSent = await sendOrderConfirmationSMS(orderData);
-    if (smsSent) {
-      console.log('✅ Order confirmation SMS sent successfully');
-    } else {
-      console.log('⚠️ Order confirmation SMS failed or skipped');
-    }
-
-    console.log('✅ Order saved successfully');
-
-    return NextResponse.json({
-      success: true,
-      message: 'Order saved successfully',
-      orderData: orderData,
-      notifications: {
-        email: emailSent,
-        sms: smsSent
-      }
+    console.log('✅ Order saved successfully:', savedOrder.id);
+    return NextResponse.json({ 
+      success: true, 
+      order: savedOrder 
     });
-
+    
   } catch (error) {
     console.error('❌ Error saving order:', error);
-    return NextResponse.json({
-      success: false,
-      error: 'Failed to save order',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 });
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Failed to save order',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    );
   }
 } 

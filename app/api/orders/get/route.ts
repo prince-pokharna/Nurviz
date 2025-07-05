@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { OrderData } from '@/lib/order-management';
+import { getOrders } from '@/lib/database-fallback';
 
 const ORDER_DATA_FILE = join(process.cwd(), 'data', 'orders.json');
 
@@ -31,11 +32,14 @@ export async function GET(request: NextRequest) {
     console.log('Customer Phone:', customerPhone);
     console.log('Customer Email:', customerEmail);
 
-    const orders = readOrders();
+    // Use the fallback database system
+    const orders = await getOrders();
+    
+    console.log(`✅ Successfully fetched ${orders.length} orders`);
 
     if (orderId) {
       // Get specific order by ID
-      const order = orders.find(o => o.orderId === orderId);
+      const order = orders.find((o: OrderData) => o.orderId === orderId);
       if (!order) {
         return NextResponse.json({
           success: false,
@@ -51,7 +55,7 @@ export async function GET(request: NextRequest) {
 
     if (customerPhone || customerEmail) {
       // Get orders by customer phone or email
-      const customerOrders = orders.filter(o => 
+      const customerOrders = orders.filter((o: OrderData) => 
         (customerPhone && o.customerPhone === customerPhone) ||
         (customerEmail && o.customerEmail === customerEmail)
       );

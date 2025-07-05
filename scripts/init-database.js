@@ -3,7 +3,36 @@
 const { initializeDatabase, createTables, executeQuery, fetchAll, closeDatabase } = require('../lib/database');
 const bcrypt = require('bcryptjs');
 
-console.log('🔄 Starting database initialization...');
+console.log('🔄 Initializing database...');
+
+// Check if we're in a serverless environment
+const isServerless = process.env.VERCEL || process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME;
+
+if (isServerless) {
+  console.log('🌐 Detected serverless environment - skipping SQLite initialization');
+  console.log('✅ Database initialization complete (using JSON fallback)');
+  process.exit(0);
+}
+
+// Only try to initialize SQLite in local environments
+try {
+  const { initializeDatabase } = require('../lib/database');
+  
+  initializeDatabase()
+    .then(() => {
+      console.log('✅ Database initialized successfully');
+      process.exit(0);
+    })
+    .catch((error) => {
+      console.error('❌ Database initialization failed:', error);
+      console.log('⚠️  Will use JSON fallback system');
+      process.exit(0); // Don't fail the build
+    });
+} catch (error) {
+  console.log('⚠️  SQLite not available, using JSON fallback system');
+  console.log('✅ Database initialization complete (using JSON fallback)');
+  process.exit(0);
+}
 
 async function initializeNurviDatabase() {
   try {

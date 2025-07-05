@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
-import fs from 'fs'
-import path from 'path'
+import { getInventory } from '@/lib/database-fallback'
 
 interface Product {
   id: number
@@ -79,66 +78,47 @@ const transformProduct = (product: any): Product => {
 
 export async function GET() {
   try {
-    // Try to load from JSON file first
-    const inventoryPath = path.join(process.cwd(), 'data', 'inventory.json')
+    console.log('🔄 Fetching inventory data...');
     
-    if (fs.existsSync(inventoryPath)) {
-      const rawData = JSON.parse(fs.readFileSync(inventoryPath, 'utf8'))
-      
-      // Transform all products to ensure proper data structure
-      const transformedProducts = rawData.all.map(transformProduct)
-      
-             // Group products by category
-       const data = {
-         all: transformedProducts,
-         featured: transformedProducts.filter((p: Product) => p.isNew || p.isSale).slice(0, 6),
-         rings: transformedProducts.filter((p: Product) => p.category.toLowerCase().includes('ring')),
-         necklaces: transformedProducts.filter((p: Product) => p.category.toLowerCase().includes('necklace')),
-         earrings: transformedProducts.filter((p: Product) => p.category.toLowerCase().includes('earring')),
-         bracelets: transformedProducts.filter((p: Product) => p.category.toLowerCase().includes('bracelet')),
-         anklets: transformedProducts.filter((p: Product) => p.category.toLowerCase().includes('anklet')),
-         collections: transformedProducts,
-         onSale: transformedProducts.filter((p: Product) => p.isSale),
-         newArrivals: transformedProducts.filter((p: Product) => p.isNew),
-         inStock: transformedProducts.filter((p: Product) => p.inStock)
-       }
-      
-      return NextResponse.json(data)
+    // Use the fallback database system
+    const inventory = await getInventory();
+    
+    if (!inventory || !inventory.all) {
+      console.log('⚠️  No inventory data found, returning empty arrays');
+      return NextResponse.json({
+        all: [],
+        featured: [],
+        collections: [],
+        categories: {
+          necklaces: [],
+          rings: [],
+          earrings: [],
+          bracelets: [],
+          anklets: []
+        }
+      });
     }
+
+    console.log(`✅ Successfully fetched ${inventory.all.length} products`);
+    return NextResponse.json(inventory);
     
-    // If JSON doesn't exist, create empty structure
-    const emptyData = {
-      all: [],
-      featured: [],
-      rings: [],
-      necklaces: [],
-      earrings: [],
-      bracelets: [],
-      anklets: [],
-      collections: [],
-      onSale: [],
-      newArrivals: [],
-      inStock: []
-    }
-    
-    return NextResponse.json(emptyData)
   } catch (error) {
-    console.error('Error loading inventory:', error)
-    
-    // Fallback to empty data if anything fails
-    const emptyData = {
-      all: [],
-      featured: [],
-      rings: [],
-      necklaces: [],
-      earrings: [],
-      bracelets: [],
-      anklets: [],
-      collections: [],
-      onSale: [],
-      newArrivals: [],
-      inStock: []
-    }
-    return NextResponse.json(emptyData)
+    console.error('❌ Error fetching inventory:', error);
+    return NextResponse.json(
+      { 
+        error: 'Failed to fetch inventory',
+        all: [],
+        featured: [],
+        collections: [],
+        categories: {
+          necklaces: [],
+          rings: [],
+          earrings: [],
+          bracelets: [],
+          anklets: []
+        }
+      },
+      { status: 500 }
+    );
   }
 } 

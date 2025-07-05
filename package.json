@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run init-db && next build && npm run sync-inventory",
+    "build": "next build",
+    "build:vercel": "next build",
+    "build:local": "npm run init-db && next build && npm run sync-inventory",
     "start": "next start",
     "lint": "next lint",
     "init-db": "node scripts/init-database.js",
@@ -75,7 +77,6 @@
     "recharts": "2.15.0",
     "sharp": "^0.34.2",
     "sonner": "^1.7.1",
-    "sqlite3": "^5.1.7",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "twilio": "latest",

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { OrderData } from '@/lib/order-management';
-import { getOrders } from '@/lib/database-fallback';
+import { getOrders } from '@/lib/database';
 
 const ORDER_DATA_FILE = join(process.cwd(), 'data', 'orders.json');
 

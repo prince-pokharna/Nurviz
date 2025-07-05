@@ -3,7 +3,7 @@ import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { OrderData, calculateEstimatedDelivery } from '@/lib/order-management';
 import nodemailer from 'nodemailer';
-import { saveOrder } from '@/lib/database-fallback';
+import { saveOrder } from '@/lib/database';
 
 const ORDER_DATA_FILE = join(process.cwd(), 'data', 'orders.json');
 

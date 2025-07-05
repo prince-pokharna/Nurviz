@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getInventory } from '@/lib/database-fallback'
+import { getInventory } from '@/lib/database'
 
 interface Product {
   id: number

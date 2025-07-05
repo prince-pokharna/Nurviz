@@ -1,0 +1,547 @@
+{
+  "timestamp": "2025-07-05T07:37:23.256Z",
+  "totalProducts": 45,
+  "totalImages": 0,
+  "products": [
+    {
+      "productId": "# FEATURED PRODUCTS SECTION (6 ITEMS)",
+      "productName": "Product 1",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-1-1.jpg",
+        "image_2": "/images/products/general/product-1-2.jpg",
+        "image_3": "/images/products/general/product-1-3.jpg",
+        "image_4": "/images/products/general/product-1-4.jpg"
+      }
+    },
+    {
+      "productId": "featured-1",
+      "productName": "Royal Thumka Necklaces",
+      "category": "featured products",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/royal-thumka-necklaces-1.jpg",
+        "image_2": "/images/products/general/royal-thumka-necklaces-2.jpg",
+        "image_3": "/images/products/general/royal-thumka-necklaces-3.jpg",
+        "image_4": "/images/products/general/royal-thumka-necklaces-4.jpg"
+      }
+    },
+    {
+      "productId": "featured-2",
+      "productName": "Diamond-Cut Hoop Earrings",
+      "category": "earrings",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/earrings/diamond-cut-hoop-earrings-1.jpg",
+        "image_2": "/images/products/earrings/diamond-cut-hoop-earrings-2.jpg",
+        "image_3": "/images/products/earrings/diamond-cut-hoop-earrings-3.jpg",
+        "image_4": "/images/products/earrings/diamond-cut-hoop-earrings-4.jpg"
+      }
+    },
+    {
+      "productId": "featured-3",
+      "productName": "Elegant Pearl Bracelet",
+      "category": "bracelets",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/bracelets/elegant-pearl-bracelet-1.jpg",
+        "image_2": "/images/products/bracelets/elegant-pearl-bracelet-2.jpg",
+        "image_3": "/images/products/bracelets/elegant-pearl-bracelet-3.jpg",
+        "image_4": "/images/products/bracelets/elegant-pearl-bracelet-4.jpg"
+      }
+    },
+    {
+      "productId": "featured-4",
+      "productName": "Statement Gold Ring",
+      "category": "rings",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/rings/statement-gold-ring-1.jpg",
+        "image_2": "/images/products/rings/statement-gold-ring-2.jpg",
+        "image_3": "/images/products/rings/statement-gold-ring-3.jpg",
+        "image_4": "/images/products/rings/statement-gold-ring-4.jpg"
+      }
+    },
+    {
+      "productId": "featured-5",
+      "productName": "Delicate Chain Anklet",
+      "category": "anklets",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/anklets/delicate-chain-anklet-1.jpg",
+        "image_2": "/images/products/anklets/delicate-chain-anklet-2.jpg",
+        "image_3": "/images/products/anklets/delicate-chain-anklet-3.jpg",
+        "image_4": "/images/products/anklets/delicate-chain-anklet-4.jpg"
+      }
+    },
+    {
+      "productId": "featured-6",
+      "productName": "Vintage Charm Necklace",
+      "category": "necklaces",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/necklaces/vintage-charm-necklace-1.jpg",
+        "image_2": "/images/products/necklaces/vintage-charm-necklace-2.jpg",
+        "image_3": "/images/products/necklaces/vintage-charm-necklace-3.jpg",
+        "image_4": "/images/products/necklaces/vintage-charm-necklace-4.jpg"
+      }
+    },
+    {
+      "productId": "# COLLECTIONS PAGE - ALL PRODUCTS (100 ITEMS)",
+      "productName": "Product 8",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-8-1.jpg",
+        "image_2": "/images/products/general/product-8-2.jpg",
+        "image_3": "/images/products/general/product-8-3.jpg",
+        "image_4": "/images/products/general/product-8-4.jpg"
+      }
+    },
+    {
+      "productId": "product-1",
+      "productName": "Celestial Ring 1",
+      "category": "rings",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/rings/celestial-ring-1-1.jpg",
+        "image_2": "/images/products/rings/celestial-ring-1-2.jpg",
+        "image_3": "/images/products/rings/celestial-ring-1-3.jpg",
+        "image_4": "/images/products/rings/celestial-ring-1-4.jpg"
+      }
+    },
+    {
+      "productId": "product-2",
+      "productName": "Layered Necklace 1",
+      "category": "necklaces",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/necklaces/layered-necklace-1-1.jpg",
+        "image_2": "/images/products/necklaces/layered-necklace-1-2.jpg",
+        "image_3": "/images/products/necklaces/layered-necklace-1-3.jpg",
+        "image_4": "/images/products/necklaces/layered-necklace-1-4.jpg"
+      }
+    },
+    {
+      "productId": "product-3",
+      "productName": "Hoop Earrings 1",
+      "category": "earrings",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/earrings/hoop-earrings-1-1.jpg",
+        "image_2": "/images/products/earrings/hoop-earrings-1-2.jpg",
+        "image_3": "/images/products/earrings/hoop-earrings-1-3.jpg",
+        "image_4": "/images/products/earrings/hoop-earrings-1-4.jpg"
+      }
+    },
+    {
+      "productId": "product-4",
+      "productName": "Cuff Bracelet 1",
+      "category": "bracelets",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/bracelets/cuff-bracelet-1-1.jpg",
+        "image_2": "/images/products/bracelets/cuff-bracelet-1-2.jpg",
+        "image_3": "/images/products/bracelets/cuff-bracelet-1-3.jpg",
+        "image_4": "/images/products/bracelets/cuff-bracelet-1-4.jpg"
+      }
+    },
+    {
+      "productId": "product-5",
+      "productName": "Beaded Anklet 1",
+      "category": "anklets",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/anklets/beaded-anklet-1-1.jpg",
+        "image_2": "/images/products/anklets/beaded-anklet-1-2.jpg",
+        "image_3": "/images/products/anklets/beaded-anklet-1-3.jpg",
+        "image_4": "/images/products/anklets/beaded-anklet-1-4.jpg"
+      }
+    },
+    {
+      "productId": "# EARRINGS PAGE - DEDICATED EARRINGS (50 ITEMS)",
+      "productName": "Product 14",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-14-1.jpg",
+        "image_2": "/images/products/general/product-14-2.jpg",
+        "image_3": "/images/products/general/product-14-3.jpg",
+        "image_4": "/images/products/general/product-14-4.jpg"
+      }
+    },
+    {
+      "productId": "earring-1",
+      "productName": "Jhumka Earrings 1",
+      "category": "earrings",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/earrings/jhumka-earrings-1-1.jpg",
+        "image_2": "/images/products/earrings/jhumka-earrings-1-2.jpg",
+        "image_3": "/images/products/earrings/jhumka-earrings-1-3.jpg",
+        "image_4": "/images/products/earrings/jhumka-earrings-1-4.jpg"
+      }
+    },
+    {
+      "productId": "earring-2",
+      "productName": "Chandbali Earrings 2",
+      "category": "earrings",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/earrings/chandbali-earrings-2-1.jpg",
+        "image_2": "/images/products/earrings/chandbali-earrings-2-2.jpg",
+        "image_3": "/images/products/earrings/chandbali-earrings-2-3.jpg",
+        "image_4": "/images/products/earrings/chandbali-earrings-2-4.jpg"
+      }
+    },
+    {
+      "productId": "earring-3",
+      "productName": "Stud Earrings 3",
+      "category": "earrings",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/earrings/stud-earrings-3-1.jpg",
+        "image_2": "/images/products/earrings/stud-earrings-3-2.jpg",
+        "image_3": "/images/products/earrings/stud-earrings-3-3.jpg",
+        "image_4": "/images/products/earrings/stud-earrings-3-4.jpg"
+      }
+    },
+    {
+      "productId": "# RINGS PAGE - DEDICATED RINGS (50 ITEMS)",
+      "productName": "Product 18",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-18-1.jpg",
+        "image_2": "/images/products/general/product-18-2.jpg",
+        "image_3": "/images/products/general/product-18-3.jpg",
+        "image_4": "/images/products/general/product-18-4.jpg"
+      }
+    },
+    {
+      "productId": "ring-1",
+      "productName": "Kundan Ring 1",
+      "category": "rings",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/rings/kundan-ring-1-1.jpg",
+        "image_2": "/images/products/rings/kundan-ring-1-2.jpg",
+        "image_3": "/images/products/rings/kundan-ring-1-3.jpg",
+        "image_4": "/images/products/rings/kundan-ring-1-4.jpg"
+      }
+    },
+    {
+      "productId": "ring-2",
+      "productName": "Diamond Ring 2",
+      "category": "rings",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/rings/diamond-ring-2-1.jpg",
+        "image_2": "/images/products/rings/diamond-ring-2-2.jpg",
+        "image_3": "/images/products/rings/diamond-ring-2-3.jpg",
+        "image_4": "/images/products/rings/diamond-ring-2-4.jpg"
+      }
+    },
+    {
+      "productId": "ring-3",
+      "productName": "Gold Ring 3",
+      "category": "rings",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/rings/gold-ring-3-1.jpg",
+        "image_2": "/images/products/rings/gold-ring-3-2.jpg",
+        "image_3": "/images/products/rings/gold-ring-3-3.jpg",
+        "image_4": "/images/products/rings/gold-ring-3-4.jpg"
+      }
+    },
+    {
+      "productId": "# NECKLACES PAGE - DEDICATED NECKLACES (50 ITEMS)",
+      "productName": "Product 22",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-22-1.jpg",
+        "image_2": "/images/products/general/product-22-2.jpg",
+        "image_3": "/images/products/general/product-22-3.jpg",
+        "image_4": "/images/products/general/product-22-4.jpg"
+      }
+    },
+    {
+      "productId": "necklace-1",
+      "productName": "Temple Necklace 1",
+      "category": "necklaces",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/necklaces/temple-necklace-1-1.jpg",
+        "image_2": "/images/products/necklaces/temple-necklace-1-2.jpg",
+        "image_3": "/images/products/necklaces/temple-necklace-1-3.jpg",
+        "image_4": "/images/products/necklaces/temple-necklace-1-4.jpg"
+      }
+    },
+    {
+      "productId": "necklace-2",
+      "productName": "Kundan Necklace 2",
+      "category": "necklaces",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/necklaces/kundan-necklace-2-1.jpg",
+        "image_2": "/images/products/necklaces/kundan-necklace-2-2.jpg",
+        "image_3": "/images/products/necklaces/kundan-necklace-2-3.jpg",
+        "image_4": "/images/products/necklaces/kundan-necklace-2-4.jpg"
+      }
+    },
+    {
+      "productId": "necklace-3",
+      "productName": "Pearl Necklace 3",
+      "category": "necklaces",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/necklaces/pearl-necklace-3-1.jpg",
+        "image_2": "/images/products/necklaces/pearl-necklace-3-2.jpg",
+        "image_3": "/images/products/necklaces/pearl-necklace-3-3.jpg",
+        "image_4": "/images/products/necklaces/pearl-necklace-3-4.jpg"
+      }
+    },
+    {
+      "productId": "# BRACELETS PAGE - DEDICATED BRACELETS (50 ITEMS)",
+      "productName": "Product 26",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-26-1.jpg",
+        "image_2": "/images/products/general/product-26-2.jpg",
+        "image_3": "/images/products/general/product-26-3.jpg",
+        "image_4": "/images/products/general/product-26-4.jpg"
+      }
+    },
+    {
+      "productId": "bracelet-1",
+      "productName": "Kada Bracelet 1",
+      "category": "bracelets",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/bracelets/kada-bracelet-1-1.jpg",
+        "image_2": "/images/products/bracelets/kada-bracelet-1-2.jpg",
+        "image_3": "/images/products/bracelets/kada-bracelet-1-3.jpg",
+        "image_4": "/images/products/bracelets/kada-bracelet-1-4.jpg"
+      }
+    },
+    {
+      "productId": "bracelet-2",
+      "productName": "Bangle Bracelet 2",
+      "category": "bracelets",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/bracelets/bangle-bracelet-2-1.jpg",
+        "image_2": "/images/products/bracelets/bangle-bracelet-2-2.jpg",
+        "image_3": "/images/products/bracelets/bangle-bracelet-2-3.jpg",
+        "image_4": "/images/products/bracelets/bangle-bracelet-2-4.jpg"
+      }
+    },
+    {
+      "productId": "bracelet-3",
+      "productName": "Chain Bracelet 3",
+      "category": "bracelets",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/bracelets/chain-bracelet-3-1.jpg",
+        "image_2": "/images/products/bracelets/chain-bracelet-3-2.jpg",
+        "image_3": "/images/products/bracelets/chain-bracelet-3-3.jpg",
+        "image_4": "/images/products/bracelets/chain-bracelet-3-4.jpg"
+      }
+    },
+    {
+      "productId": "# ANKLETS PAGE - DEDICATED ANKLETS (50 ITEMS)",
+      "productName": "Product 30",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-30-1.jpg",
+        "image_2": "/images/products/general/product-30-2.jpg",
+        "image_3": "/images/products/general/product-30-3.jpg",
+        "image_4": "/images/products/general/product-30-4.jpg"
+      }
+    },
+    {
+      "productId": "anklet-1",
+      "productName": "Traditional Anklet 1",
+      "category": "anklets",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/anklets/traditional-anklet-1-1.jpg",
+        "image_2": "/images/products/anklets/traditional-anklet-1-2.jpg",
+        "image_3": "/images/products/anklets/traditional-anklet-1-3.jpg",
+        "image_4": "/images/products/anklets/traditional-anklet-1-4.jpg"
+      }
+    },
+    {
+      "productId": "anklet-2",
+      "productName": "Silver Anklet 2",
+      "category": "anklets",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/anklets/silver-anklet-2-1.jpg",
+        "image_2": "/images/products/anklets/silver-anklet-2-2.jpg",
+        "image_3": "/images/products/anklets/silver-anklet-2-3.jpg",
+        "image_4": "/images/products/anklets/silver-anklet-2-4.jpg"
+      }
+    },
+    {
+      "productId": "anklet-3",
+      "productName": "Gold Anklet 3",
+      "category": "anklets",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/anklets/gold-anklet-3-1.jpg",
+        "image_2": "/images/products/anklets/gold-anklet-3-2.jpg",
+        "image_3": "/images/products/anklets/gold-anklet-3-3.jpg",
+        "image_4": "/images/products/anklets/gold-anklet-3-4.jpg"
+      }
+    },
+    {
+      "productId": "# INVENTORY SUMMARY",
+      "productName": "Product 34",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-34-1.jpg",
+        "image_2": "/images/products/general/product-34-2.jpg",
+        "image_3": "/images/products/general/product-34-3.jpg",
+        "image_4": "/images/products/general/product-34-4.jpg"
+      }
+    },
+    {
+      "productId": "# Total Products: 356 items across all website sections",
+      "productName": "Product 35",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-35-1.jpg",
+        "image_2": "/images/products/general/product-35-2.jpg",
+        "image_3": "/images/products/general/product-35-3.jpg",
+        "image_4": "/images/products/general/product-35-4.jpg"
+      }
+    },
+    {
+      "productId": "# Featured Products: 6 items",
+      "productName": "Product 36",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-36-1.jpg",
+        "image_2": "/images/products/general/product-36-2.jpg",
+        "image_3": "/images/products/general/product-36-3.jpg",
+        "image_4": "/images/products/general/product-36-4.jpg"
+      }
+    },
+    {
+      "productId": "# Collections Page: 100 items (20 each category)",
+      "productName": "Product 37",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-37-1.jpg",
+        "image_2": "/images/products/general/product-37-2.jpg",
+        "image_3": "/images/products/general/product-37-3.jpg",
+        "image_4": "/images/products/general/product-37-4.jpg"
+      }
+    },
+    {
+      "productId": "# Earrings Page: 50 items",
+      "productName": "Product 38",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-38-1.jpg",
+        "image_2": "/images/products/general/product-38-2.jpg",
+        "image_3": "/images/products/general/product-38-3.jpg",
+        "image_4": "/images/products/general/product-38-4.jpg"
+      }
+    },
+    {
+      "productId": "# Rings Page: 50 items  ",
+      "productName": "Product 39",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-39-1.jpg",
+        "image_2": "/images/products/general/product-39-2.jpg",
+        "image_3": "/images/products/general/product-39-3.jpg",
+        "image_4": "/images/products/general/product-39-4.jpg"
+      }
+    },
+    {
+      "productId": "# Necklaces Page: 50 items",
+      "productName": "Product 40",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-40-1.jpg",
+        "image_2": "/images/products/general/product-40-2.jpg",
+        "image_3": "/images/products/general/product-40-3.jpg",
+        "image_4": "/images/products/general/product-40-4.jpg"
+      }
+    },
+    {
+      "productId": "# Bracelets Page: 50 items",
+      "productName": "Product 41",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-41-1.jpg",
+        "image_2": "/images/products/general/product-41-2.jpg",
+        "image_3": "/images/products/general/product-41-3.jpg",
+        "image_4": "/images/products/general/product-41-4.jpg"
+      }
+    },
+    {
+      "productId": "# Anklets Page: 50 items",
+      "productName": "Product 42",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-42-1.jpg",
+        "image_2": "/images/products/general/product-42-2.jpg",
+        "image_3": "/images/products/general/product-42-3.jpg",
+        "image_4": "/images/products/general/product-42-4.jpg"
+      }
+    },
+    {
+      "productId": "# Note: This Excel file contains complete inventory data for all products displayed on the Nurvi Jewels website",
+      "productName": "Product 43",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-43-1.jpg",
+        "image_2": "/images/products/general/product-43-2.jpg",
+        "image_3": "/images/products/general/product-43-3.jpg",
+        "image_4": "/images/products/general/product-43-4.jpg"
+      }
+    },
+    {
+      "productId": "# Each product has full details across all 50 data fields for comprehensive stock management",
+      "productName": "Product 44",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-44-1.jpg",
+        "image_2": "/images/products/general/product-44-2.jpg",
+        "image_3": "/images/products/general/product-44-3.jpg",
+        "image_4": "/images/products/general/product-44-4.jpg"
+      }
+    },
+    {
+      "productId": "# All products are optimized for content creators and influencers with anti-tarnish properties ",
+      "productName": "Product 45",
+      "category": "general",
+      "imageCount": 0,
+      "imagePaths": {
+        "main_image": "/images/products/general/product-45-1.jpg",
+        "image_2": "/images/products/general/product-45-2.jpg",
+        "image_3": "/images/products/general/product-45-3.jpg",
+        "image_4": "/images/products/general/product-45-4.jpg"
+      }
+    }
+  ]
+}

@@ -413,54 +413,69 @@ async function generateJSONOutput() {
     const allProducts = await fetchAll('SELECT * FROM products ORDER BY created_at DESC');
     
     // Transform products to match frontend interface
-    const transformedProducts = allProducts.map(p => ({
-      id: p.product_id,
-      name: p.product_name,
-      price: p.price || 0,
-      originalPrice: p.original_price > 0 ? p.original_price : undefined,
-      image: p.main_image,
-      images: [p.main_image, p.image_2, p.image_3, p.image_4].filter(Boolean),
-      category: p.category,
-      section: p.website_section,
-      description: p.description,
-      material: p.material,
-      weight: p.weight_grams,
-      size: p.length_size,
-      colors: p.colors_available ? p.colors_available.split(',').map(c => c.trim()).filter(Boolean) : [],
-      sizes: p.sizes_available ? p.sizes_available.split(',').map(s => s.trim()).filter(Boolean) : [],
-      style: p.style,
-      occasion: p.occasion,
-      features: p.features ? p.features.split(',').map(f => f.trim()).filter(Boolean) : [],
-      rating: p.rating || 0,
-      reviews: p.reviews_count || 0,
-      inStock: Boolean(p.in_stock),
-      isNew: Boolean(p.is_new),
-      isSale: Boolean(p.is_sale),
-      careInstructions: p.care_instructions,
-      sku: p.sku,
-      brand: p.brand,
-      collection: p.collection,
-      tags: p.tags ? p.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
-      seoTitle: p.seo_title,
-      seoDescription: p.seo_description,
-      dateAdded: p.date_added,
-      lastUpdated: p.last_updated,
-      inventory: {
-        stock: p.stock_quantity || 0,
-        minimumStock: p.minimum_stock || 0,
-        costPrice: p.cost_price || 0
-      },
-      contentCreator: {
-        uniquenessFactor: p.uniqueness_factor,
-        antiTarnish: Boolean(p.anti_tarnish)
-      },
-      social: {
-        socialMediaTags: p.social_media_tags,
-        instagramHashtags: p.instagram_hashtags
-      },
-      // Keep original database fields for backward compatibility
-      ...p
-    }));
+    const transformedProducts = allProducts.map(p => {
+      // Helper function to fix image paths
+      const fixImagePath = (imagePath) => {
+        if (!imagePath) return '';
+        // If path already starts with /images, return as is
+        if (imagePath.startsWith('/images/')) return imagePath;
+        // If path starts with /products, prepend /images
+        if (imagePath.startsWith('/products/')) return `/images${imagePath}`;
+        // If path doesn't start with /, prepend /images/products/
+        if (!imagePath.startsWith('/')) return `/images/products/${imagePath}`;
+        // Default case
+        return imagePath;
+      };
+
+      return {
+        id: p.product_id,
+        name: p.product_name,
+        price: p.price || 0,
+        originalPrice: p.original_price > 0 ? p.original_price : undefined,
+        image: fixImagePath(p.main_image),
+        images: [p.main_image, p.image_2, p.image_3, p.image_4].filter(Boolean).map(fixImagePath),
+        category: p.category,
+        section: p.website_section,
+        description: p.description,
+        material: p.material,
+        weight: p.weight_grams,
+        size: p.length_size,
+        colors: p.colors_available ? p.colors_available.split('|').map(c => c.trim()).filter(Boolean) : [],
+        sizes: p.sizes_available ? p.sizes_available.split('|').map(s => s.trim()).filter(Boolean) : [],
+        style: p.style,
+        occasion: p.occasion,
+        features: p.features ? p.features.split('|').map(f => f.trim()).filter(Boolean) : [],
+        rating: p.rating || 0,
+        reviews: p.reviews_count || 0,
+        inStock: Boolean(p.in_stock),
+        isNew: Boolean(p.is_new),
+        isSale: Boolean(p.is_sale),
+        careInstructions: p.care_instructions,
+        sku: p.sku,
+        brand: p.brand,
+        collection: p.collection,
+        tags: p.tags ? p.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
+        seoTitle: p.seo_title,
+        seoDescription: p.seo_description,
+        dateAdded: p.date_added,
+        lastUpdated: p.last_updated,
+        inventory: {
+          stock: p.stock_quantity || 0,
+          minimumStock: p.minimum_stock || 0,
+          costPrice: p.cost_price || 0
+        },
+        contentCreator: {
+          uniquenessFactor: p.uniqueness_factor,
+          antiTarnish: Boolean(p.anti_tarnish)
+        },
+        social: {
+          socialMediaTags: p.social_media_tags,
+          instagramHashtags: p.instagram_hashtags
+        },
+        // Keep original database fields for backward compatibility
+        ...p
+      };
+    });
     
     // Categorize products
     const categorizedData = {

@@ -12,7 +12,10 @@
     "sync-legacy": "node scripts/sync-inventory.js",
     "auto-csv": "node scripts/auto-csv-download.js",
     "reset-db": "rm -f data/nurvi_jewels.db && npm run init-db",
-    "migrate-data": "node scripts/migrate-json-to-db.js"
+    "migrate-data": "node scripts/migrate-json-to-db.js",
+    "auto-extract": "node scripts/auto-extract-images-advanced.js",
+    "setup-images": "node scripts/setup-image-structure.js",
+    "setup": "npm install && npm run init-db"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
@@ -53,6 +56,7 @@
     "cron": "^3.5.0",
     "date-fns": "3.6.0",
     "embla-carousel-react": "8.5.1",
+    "exceljs": "^4.4.0",
     "framer-motion": "latest",
     "input-otp": "1.4.1",
     "jimp": "^1.6.0",

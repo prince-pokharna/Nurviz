@@ -160,95 +160,97 @@ export default function ProductCard({ product, viewMode = "grid", onQuickView }:
   }
 
   return (
-    <Link href={`/products/${product.id}`} className="block group">
-      <motion.div
-        className="premium-card rounded-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        whileHover={{ scale: 1.02 }}
-        transition={{ duration: 0.3 }}
-      >
-        <div className="relative overflow-hidden">
-          <img
-            src={product.image || "/placeholder.svg"}
-            alt={product.name}
-            className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
-          />
+    <div className="block group relative">
+      <Link href={`/products/${product.id}`} className="block">
+        <motion.div
+          className="premium-card rounded-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="relative overflow-hidden">
+            <img
+              src={product.image || "/placeholder.svg"}
+              alt={product.name}
+              className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
+            />
 
-          {/* Badges */}
-          <div className="absolute top-3 left-3 space-y-2">
-            {product.isNew && (
-              <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg">New</Badge>
-            )}
-            {product.isSale && (
-              <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg">Sale</Badge>
-            )}
-          </div>
+            {/* Badges */}
+            <div className="absolute top-3 left-3 space-y-2">
+              {product.isNew && (
+                <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg">New</Badge>
+              )}
+              {product.isSale && (
+                <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg">Sale</Badge>
+              )}
+            </div>
 
-          {/* Wishlist Button */}
-          <Button
-            variant="secondary"
-            size="icon"
-            className="absolute top-3 right-3 bg-white/90 hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full shadow-lg"
-            onClick={handleWishlist}
-          >
-            <Heart className={`h-4 w-4 ${isWishlisted(product.id) ? "fill-current text-rose-500" : "text-luxury-600"}`} />
-          </Button>
-
-          {/* Hover Actions */}
-          <div
-            className={`absolute inset-0 bg-luxury-900/20 flex items-center justify-center space-x-3 transition-opacity duration-500 ${
-              isHovered ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <Button
-              onClick={handleAddToCart}
-              className="luxury-gradient text-white transform hover:scale-105 transition-all duration-300 rounded-full shadow-lg"
-            >
-              <ShoppingBag className="h-4 w-4 mr-2" />
-              Quick Add
-            </Button>
+            {/* Wishlist Button */}
             <Button
               variant="secondary"
-              className="bg-white/90 hover:bg-white transform hover:scale-105 transition-all duration-300 rounded-full shadow-lg text-luxury-700"
-              onClick={handleQuickView}
+              size="icon"
+              className="absolute top-3 right-3 bg-white/90 hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full shadow-lg z-10"
+              onClick={handleWishlist}
             >
-              <Eye className="h-4 w-4 mr-2" />
-              Quick View
+              <Heart className={`h-4 w-4 ${isWishlisted(product.id) ? "fill-current text-rose-500" : "text-luxury-600"}`} />
             </Button>
-          </div>
-        </div>
 
-        <div className="p-4 space-y-3">
-          <div>
-            <p className="text-sm text-luxury-600 font-medium">{product.category}</p>
-            <h3 className="text-lg font-semibold text-luxury-900 group-hover:text-luxury-600 transition-colors line-clamp-2">
-              {product.name}
-            </h3>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <div className="flex items-center">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={`h-3 w-3 ${
-                    i < Math.floor(product.rating || 0) ? "text-gold-500 fill-current" : "text-pearl-400"
-                  }`}
-                />
-              ))}
+            {/* Hover Actions */}
+            <div
+              className={`absolute inset-0 bg-luxury-900/20 flex items-center justify-center space-x-3 transition-opacity duration-500 z-10 ${
+                isHovered ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <Button
+                onClick={handleAddToCart}
+                className="luxury-gradient text-white transform hover:scale-105 transition-all duration-300 rounded-full shadow-lg"
+              >
+                <ShoppingBag className="h-4 w-4 mr-2" />
+                Quick Add
+              </Button>
+              <Button
+                variant="secondary"
+                className="bg-white/90 hover:bg-white transform hover:scale-105 transition-all duration-300 rounded-full shadow-lg text-luxury-700"
+                onClick={handleQuickView}
+              >
+                <Eye className="h-4 w-4 mr-2" />
+                Quick View
+              </Button>
             </div>
-            <span className="text-xs text-luxury-600">({product.reviews || 0})</span>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <span className="text-xl font-bold text-luxury-900">₹{(product.price || 0).toLocaleString()}</span>
-            {product.originalPrice && product.originalPrice > 0 && (
-              <span className="text-sm text-luxury-500 line-through">₹{product.originalPrice.toLocaleString()}</span>
-            )}
+          <div className="p-4 space-y-3">
+            <div>
+              <p className="text-sm text-luxury-600 font-medium">{product.category}</p>
+              <h3 className="text-lg font-semibold text-luxury-900 group-hover:text-luxury-600 transition-colors line-clamp-2">
+                {product.name}
+              </h3>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <div className="flex items-center">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`h-3 w-3 ${
+                      i < Math.floor(product.rating || 0) ? "text-gold-500 fill-current" : "text-pearl-400"
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-xs text-luxury-600">({product.reviews || 0})</span>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <span className="text-xl font-bold text-luxury-900">₹{(product.price || 0).toLocaleString()}</span>
+              {product.originalPrice && product.originalPrice > 0 && (
+                <span className="text-sm text-luxury-500 line-through">₹{product.originalPrice.toLocaleString()}</span>
+              )}
+            </div>
           </div>
-        </div>
-      </motion.div>
-    </Link>
+        </motion.div>
+      </Link>
+    </div>
   )
 }

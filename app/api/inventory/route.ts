@@ -41,34 +41,41 @@ const stringToArray = (str: any): string[] => {
 }
 
 // Helper function to transform product data
-const transformProduct = (product: any): Product => ({
-  id: product.id,
-  name: product.name,
-  category: product.category,
-  price: product.price || 0,
-  originalPrice: product.originalPrice || product.original_price || 0,
-  image: product.image || product.main_image || "/placeholder.svg",
-  description: product.description || "",
-  material: product.material || "",
-  gemstone: product.gemstone || "",
-  weight: product.weight || product.weight_grams || 0,
-  sizes: stringToArray(product.size || product.sizes || product.sizes_available || product.length_size),
-  colors: stringToArray(product.colors || product.colors_available),
-  style: product.style || "",
-  occasion: product.style || "",
-  features: stringToArray(product.occasion || product.features), // Fix: features are in occasion field
-  rating: product.rating || 0,
-  reviews: product.reviews || product.reviews_count || 0,
-  inStock: product.inStock || product.in_stock === 1 || true,
-  isNew: product.isNew || product.is_new === 1 || false,
-  isSale: product.isSale || product.is_sale === 1 || (product.originalPrice && product.originalPrice > product.price),
-  sku: product.sku || "",
-  brand: product.brand || "Nurvi Jewel",
-  collection: product.collection || "",
-  tags: stringToArray(product.tags || product.collection),
-  createdAt: product.createdAt || product.created_at || "",
-  updatedAt: product.updatedAt || product.updated_at || ""
-})
+const transformProduct = (product: any): Product => {
+  // TEMPORARY WORKAROUND: The Excel file has colors and sizes in wrong columns
+  // Swap the data to fix the display issue
+  const correctColors = stringToArray(product.length_size || product.sizes_available || product.size)
+  const correctSizes = stringToArray(product.colors_available || product.sizes || product.colors)
+  
+  return {
+    id: product.id,
+    name: product.name,
+    category: product.category,
+    price: product.price || 0,
+    originalPrice: product.originalPrice || product.original_price || 0,
+    image: product.image || product.main_image || "/placeholder.svg",
+    description: product.description || "",
+    material: product.material || "",
+    gemstone: product.gemstone || "",
+    weight: product.weight || product.weight_grams || 0,
+    sizes: correctSizes,
+    colors: correctColors,
+    style: product.style || "",
+    occasion: product.occasion || "",
+    features: stringToArray(product.features || product.occasion),
+    rating: product.rating || 0,
+    reviews: product.reviews || product.reviews_count || 0,
+    inStock: product.inStock || product.in_stock === 1 || true,
+    isNew: product.isNew || product.is_new === 1 || false,
+    isSale: product.isSale || product.is_sale === 1 || (product.originalPrice && product.originalPrice > product.price),
+    sku: product.sku || "",
+    brand: product.brand || "Nurvi Jewel",
+    collection: product.collection || "",
+    tags: stringToArray(product.tags || product.collection),
+    createdAt: product.createdAt || product.created_at || "",
+    updatedAt: product.updatedAt || product.updated_at || ""
+  }
+}
 
 export async function GET() {
   try {

@@ -165,8 +165,9 @@ function mapProductData(row: any) {
     description: toString(mapped.description),
     image: toString(mapped.main_image) || '/placeholder.svg',
     features: stringToArray(mapped.features),
-    colors: stringToArray(mapped.colors_available),
-    sizes: stringToArray(mapped.sizes_available),
+    // TEMPORARY WORKAROUND: Excel file has colors and sizes in wrong columns
+    colors: stringToArray(mapped.length_size || mapped.sizes_available),
+    sizes: stringToArray(mapped.colors_available || mapped.sizes),
     material: toString(mapped.material),
     weight: toNumber(mapped.weight_grams),
     style: toString(mapped.style),

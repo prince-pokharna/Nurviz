@@ -199,11 +199,8 @@ export default function ProductDetailPage() {
                     id: product.id,
                     name: product.name,
                     price: product.price,
-                    originalPrice: product.originalPrice,
                     image: product.image,
-                    category: product.category,
-                    isNew: product.isNew,
-                    isSale: product.isSale,
+                    category: product.category
                   })}
                 >
                   <Heart className={`h-5 w-5 ${isWishlisted(product.id) ? "fill-current text-red-500" : "text-gray-600"}`} />
@@ -341,10 +338,16 @@ export default function ProductDetailPage() {
                   <Button
                     variant="outline"
                     className="flex-1 border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white"
-                    onClick={() => setIsWishlisted(!isWishlisted)}
+                    onClick={() => toggleWishlist({
+                      id: product.id,
+                      name: product.name,
+                      price: product.price,
+                      image: product.image,
+                      category: product.category
+                    })}
                   >
-                    <Heart className={`h-4 w-4 mr-2 ${isWishlisted ? "fill-current" : ""}`} />
-                    {isWishlisted ? "Wishlisted" : "Add to Wishlist"}
+                    <Heart className={`h-4 w-4 mr-2 ${isWishlisted(product.id) ? "fill-current" : ""}`} />
+                    {isWishlisted(product.id) ? "Wishlisted" : "Add to Wishlist"}
                   </Button>
                   <Button variant="outline" onClick={handleShare}>
                     <Share2 className="h-4 w-4 mr-2" />

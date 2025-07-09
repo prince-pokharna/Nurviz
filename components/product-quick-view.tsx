@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useCart } from "@/contexts/cart-context"
 import { useWishlist } from "@/contexts/wishlist-context"
 import { useToast } from "@/hooks/use-toast"
+import { ensureArray, hasContent } from "@/lib/utils"
 
 interface Product {
   id: string
@@ -35,8 +36,8 @@ interface ProductQuickViewProps {
 
 export function ProductQuickView({ product, isOpen, onClose }: ProductQuickViewProps) {
   const [selectedImage, setSelectedImage] = useState(0)
-  const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || "")
-  const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || "")
+  const [selectedSize, setSelectedSize] = useState(ensureArray(product.sizes)[0] || "")
+  const [selectedColor, setSelectedColor] = useState(ensureArray(product.colors)[0] || "")
   const [quantity, setQuantity] = useState(1)
   const { addItem } = useCart()
   const { isWishlisted, toggleWishlist } = useWishlist()
@@ -187,7 +188,7 @@ export function ProductQuickView({ product, isOpen, onClose }: ProductQuickViewP
 
               {/* Options */}
               <div className="space-y-4">
-                {product.colors && product.colors.length > 0 && (
+                {hasContent(product.colors) && (
                   <div>
                     <label className="block text-sm font-medium text-luxury-700 mb-2">Color</label>
                     <Select value={selectedColor} onValueChange={setSelectedColor}>
@@ -195,7 +196,7 @@ export function ProductQuickView({ product, isOpen, onClose }: ProductQuickViewP
                         <SelectValue placeholder="Select color" />
                       </SelectTrigger>
                       <SelectContent>
-                        {product.colors.map((color) => (
+                        {ensureArray(product.colors).map((color) => (
                           <SelectItem key={color} value={color}>
                             {color}
                           </SelectItem>
@@ -205,7 +206,7 @@ export function ProductQuickView({ product, isOpen, onClose }: ProductQuickViewP
                   </div>
                 )}
 
-                {product.sizes && product.sizes.length > 0 && (
+                {hasContent(product.sizes) && (
                   <div>
                     <label className="block text-sm font-medium text-luxury-700 mb-2">Size</label>
                     <Select value={selectedSize} onValueChange={setSelectedSize}>
@@ -213,7 +214,7 @@ export function ProductQuickView({ product, isOpen, onClose }: ProductQuickViewP
                         <SelectValue placeholder="Select size" />
                       </SelectTrigger>
                       <SelectContent>
-                        {product.sizes.map((size) => (
+                        {ensureArray(product.sizes).map((size) => (
                           <SelectItem key={size} value={size}>
                             {size}
                           </SelectItem>

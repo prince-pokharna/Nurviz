@@ -18,7 +18,7 @@ if (isServerless) {
 }
 
 // Configuration
-const EXCEL_FILE = path.join(__dirname, '..', 'Stock-Management-Inventory.xlsx');
+const EXCEL_FILE = path.join(__dirname, '..', 'Stock-Management-Inventory-Updated.xlsx');
 const OUTPUT_DIR = path.join(__dirname, '..', 'data');
 const IMAGES_DIR = path.join(__dirname, '..', 'public', 'images', 'products');
 const BACKUP_DIR = path.join(OUTPUT_DIR, 'backups');
@@ -62,8 +62,7 @@ const COLUMN_MAPPING = {
   'Occasion': 'occasion',
   'Features': 'features',
   'Rating': 'rating',
-  'Reviews Count': 'reviews_count',
-  'Reviews_Count': 'reviews_count',
+
   'In Stock': 'in_stock',
   'In_Stock': 'in_stock',
   'Is New': 'is_new',
@@ -76,16 +75,7 @@ const COLUMN_MAPPING = {
   'Brand': 'brand',
   'Collection': 'collection',
   'Tags': 'tags',
-  'SEO Title': 'seo_title',
-  'SEO_Title': 'seo_title',
-  'SEO Description': 'seo_description',
-  'SEO_Description': 'seo_description',
-  'Date Added': 'date_added',
-  'Date_Added': 'date_added',
-  'Last Updated': 'last_updated',
-  'Last_Updated': 'last_updated',
-  'Stock Quantity': 'stock_quantity',
-  'Stock_Quantity': 'stock_quantity',
+
   'Minimum Stock': 'minimum_stock',
   'Minimum_Stock': 'minimum_stock',
   'Cost Price': 'cost_price',
@@ -94,8 +84,7 @@ const COLUMN_MAPPING = {
   'Uniqueness_Factor': 'uniqueness_factor',
   'Anti-Tarnish': 'anti_tarnish',
   'Anti_Tarnish': 'anti_tarnish',
-  'Social Media Tags': 'social_media_tags',
-  'Social_Media_Tags': 'social_media_tags',
+
   'Instagram Hashtags': 'instagram_hashtags',
   'Instagram_Hashtags': 'instagram_hashtags'
 };

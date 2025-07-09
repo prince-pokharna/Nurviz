@@ -14,6 +14,7 @@ import Footer from "@/components/footer"
 import { useCart } from "@/contexts/cart-context"
 import { useWishlist } from "@/contexts/wishlist-context"
 import { useToast } from "@/hooks/use-toast"
+import { ensureArray, hasContent } from "@/lib/utils"
 // Removed import { getProductById } from "@/lib/constants"
 
 export default function ProductDetailPage() {
@@ -44,8 +45,8 @@ export default function ProductDetailPage() {
             
             if (productData) {
               setProduct(productData)
-              setSelectedColor(productData.colors?.[0] || '')
-              setSelectedSize(productData.sizes?.[0] || '')
+              setSelectedColor(ensureArray(productData.colors)[0] || '')
+              setSelectedSize(ensureArray(productData.sizes)[0] || '')
             }
           }
         } catch (error) {
@@ -60,8 +61,8 @@ export default function ProductDetailPage() {
 
   const handleAddToCart = () => {
     // Check if size and color are available and required
-    const sizeRequired = product.sizes && product.sizes.length > 0
-    const colorRequired = product.colors && product.colors.length > 0
+    const sizeRequired = hasContent(product.sizes)
+    const colorRequired = hasContent(product.colors)
     
     if ((sizeRequired && !selectedSize) || (colorRequired && !selectedColor)) {
       toast({
@@ -268,7 +269,7 @@ export default function ProductDetailPage() {
 
               {/* Product Options */}
               <div className="space-y-4">
-                {product.colors && product.colors.length > 0 && (
+                {hasContent(product.colors) && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
                     <Select value={selectedColor} onValueChange={setSelectedColor}>
@@ -276,7 +277,7 @@ export default function ProductDetailPage() {
                         <SelectValue placeholder="Select color" />
                       </SelectTrigger>
                       <SelectContent>
-                        {product.colors.map((color: string) => (
+                        {ensureArray(product.colors).map((color: string) => (
                           <SelectItem key={color} value={color}>
                             {color}
                           </SelectItem>
@@ -286,7 +287,7 @@ export default function ProductDetailPage() {
                   </div>
                 )}
 
-                {product.sizes && product.sizes.length > 0 && (
+                {hasContent(product.sizes) && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Size</label>
                     <Select value={selectedSize} onValueChange={setSelectedSize}>
@@ -294,7 +295,7 @@ export default function ProductDetailPage() {
                         <SelectValue placeholder="Select size" />
                       </SelectTrigger>
                       <SelectContent>
-                        {product.sizes.map((size: string) => (
+                        {ensureArray(product.sizes).map((size: string) => (
                           <SelectItem key={size} value={size}>
                             {size}
                           </SelectItem>
@@ -398,7 +399,7 @@ export default function ProductDetailPage() {
                     <p className="text-gray-600 leading-relaxed mb-6">{product.description}</p>
                     <h4 className="font-semibold mb-3">Key Features:</h4>
                     <ul className="space-y-2">
-                      {(product.features || []).map((feature: string, index: number) => (
+                      {ensureArray(product.features).map((feature: string, index: number) => (
                         <li key={index} className="flex items-center space-x-2">
                           <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
                           <span className="text-gray-600">{feature}</span>

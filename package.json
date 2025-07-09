@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run init-db && next build",
     "build:vercel": "next build",
     "build:local": "npm run init-db && next build && npm run sync-inventory",
     "start": "next start",
@@ -17,7 +17,8 @@
     "migrate-data": "node scripts/migrate-json-to-db.js",
     "auto-extract": "node scripts/auto-extract-images-advanced.js",
     "setup-images": "node scripts/setup-image-structure.js",
-    "setup": "npm install && npm run init-db"
+    "setup": "npm install && npm run init-db",
+    "postinstall": "npm run init-db"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",

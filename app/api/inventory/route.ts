@@ -39,13 +39,8 @@ const stringToArray = (str: any): string[] => {
   return []
 }
 
-// Helper function to transform product data
+// Helper function to transform product data for consistency
 const transformProduct = (product: any): Product => {
-  // TEMPORARY WORKAROUND: The Excel file has colors and sizes in wrong columns
-  // Swap the data to fix the display issue
-  const correctColors = stringToArray(product.length_size || product.sizes_available || product.size)
-  const correctSizes = stringToArray(product.colors_available || product.sizes || product.colors)
-  
   return {
     id: product.id,
     name: product.name,
@@ -57,11 +52,12 @@ const transformProduct = (product: any): Product => {
     material: product.material || "",
     gemstone: product.gemstone || "",
     weight: product.weight || product.weight_grams || 0,
-    sizes: correctSizes,
-    colors: correctColors,
+    // FIXED: Properly map sizes and colors from the correct fields
+    sizes: stringToArray(product.sizes || product.sizes_available || []),
+    colors: stringToArray(product.colors || product.colors_available || []),
     style: product.style || "",
     occasion: product.occasion || "",
-    features: stringToArray(product.features || product.occasion),
+    features: stringToArray(product.features || []),
     rating: product.rating || 0,
     reviews: product.reviews || product.reviews_count || 0,
     inStock: product.inStock || product.in_stock === 1 || true,
@@ -70,7 +66,7 @@ const transformProduct = (product: any): Product => {
     sku: product.sku || "",
     brand: product.brand || "Nurvi Jewel",
     collection: product.collection || "",
-    tags: stringToArray(product.tags || product.collection),
+    tags: stringToArray(product.tags || product.collection || []),
     createdAt: product.createdAt || product.created_at || "",
     updatedAt: product.updatedAt || product.updated_at || ""
   }
@@ -80,7 +76,7 @@ export async function GET() {
   try {
     console.log('🔄 Fetching inventory data...');
     
-    // Use the fallback database system
+    // Get inventory data
     const inventory = await getInventory();
     
     if (!inventory || !inventory.all) {
@@ -99,8 +95,25 @@ export async function GET() {
       });
     }
 
-    console.log(`✅ Successfully fetched ${inventory.all.length} products`);
-    return NextResponse.json(inventory);
+    // Transform all products to ensure consistency
+    const transformedData = {
+      all: inventory.all.map(transformProduct),
+      featured: (inventory.featured || []).map(transformProduct),
+      collections: (inventory.collections || []).map(transformProduct),
+      categories: {
+        necklaces: (inventory.categories?.necklaces || inventory.necklaces || []).map(transformProduct),
+        rings: (inventory.categories?.rings || inventory.rings || []).map(transformProduct),
+        earrings: (inventory.categories?.earrings || inventory.earrings || []).map(transformProduct),
+        bracelets: (inventory.categories?.bracelets || inventory.bracelets || []).map(transformProduct),
+        anklets: (inventory.categories?.anklets || inventory.anklets || []).map(transformProduct)
+      }
+    };
+
+    console.log(`✅ Successfully fetched ${transformedData.all.length} products`);
+    console.log(`📊 Sample product sizes: ${transformedData.all[0]?.sizes?.join(', ') || 'None'}`);
+    console.log(`📊 Sample product colors: ${transformedData.all[0]?.colors?.join(', ') || 'None'}`);
+    
+    return NextResponse.json(transformedData);
     
   } catch (error) {
     console.error('❌ Error fetching inventory:', error);

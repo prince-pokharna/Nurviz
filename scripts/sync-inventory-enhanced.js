@@ -23,7 +23,7 @@ const OUTPUT_DIR = path.join(__dirname, '..', 'data');
 const IMAGES_DIR = path.join(__dirname, '..', 'public', 'images', 'products');
 const BACKUP_DIR = path.join(OUTPUT_DIR, 'backups');
 
-// Streamlined Excel Schema Mapping
+// Enhanced Excel Schema Mapping with proper column mapping
 const COLUMN_MAPPING = {
   'Product ID': 'product_id',
   'Product_ID': 'product_id',
@@ -52,12 +52,12 @@ const COLUMN_MAPPING = {
   'Material': 'material',
   'Weight (grams)': 'weight_grams',
   'Weight_Grams': 'weight_grams',
-  'Length/Size': 'length_size',
-  'Length_Size': 'length_size',
-  'Colors Available': 'colors_available',
+  'Length/Size': 'sizes_available',  // CORRECTED: This contains actual size info
+  'Length_Size': 'sizes_available',
+  'Colors Available': 'colors_available',  // CORRECT: This contains actual colors
   'Colors_Available': 'colors_available',
-  'Sizes Available': 'sizes_available',
-  'Sizes_Available': 'sizes_available',
+  'Sizes Available': 'product_variants',  // CORRECTED: This contains variants, not sizes
+  'Sizes_Available': 'product_variants',
   'Style': 'style',
   'Occasion': 'occasion',
   'Features': 'features',
@@ -123,12 +123,12 @@ async function syncInventoryEnhanced() {
     // Create backup before sync
     await createBackup();
     
-    // Process and sync products to database
+    // ALWAYS generate JSON output for local development
+    await generateJSONOutput(validProducts);
+    
+    // Also sync to database if available
     const syncResult = await syncProductsToDatabase(validProducts);
     console.log(`✅ Sync completed: ${syncResult.successful} successful, ${syncResult.failed} failed`);
-
-    // Generate JSON output for backward compatibility
-    await generateJSONOutput();
     
     // Update sync log
     await updateSyncLog(syncLogId, 'completed', validProducts.length, syncResult.successful, syncResult.failed);
@@ -406,13 +406,10 @@ async function updateProduct(product) {
   await executeQuery(sql, values);
 }
 
-async function generateJSONOutput() {
+async function generateJSONOutput(products) {
   try {
-    // Fetch all products from database
-    const allProducts = await fetchAll('SELECT * FROM products ORDER BY created_at DESC');
-    
     // Transform products to match frontend interface
-    const transformedProducts = allProducts.map(p => {
+    const transformedProducts = products.map(p => {
       // Helper function to fix image paths
       const fixImagePath = (imagePath) => {
         if (!imagePath) return '';
@@ -426,6 +423,73 @@ async function generateJSONOutput() {
         return imagePath;
       };
 
+      // Helper function to split pipe-separated values
+      const splitPipeValues = (value) => {
+        if (!value) return [];
+        return String(value).split('|').map(v => v.trim()).filter(Boolean);
+      };
+
+      // Helper function to detect if a value contains colors or sizes
+      const detectDataType = (value) => {
+        if (!value) return 'unknown';
+        const str = String(value).toLowerCase();
+        
+        // Common color keywords
+        const colorKeywords = ['gold', 'silver', 'rose gold', 'white gold', 'black', 'white', 'red', 'blue', 'green', 'pink', 'purple', 'yellow', 'bronze', 'copper', 'platinum'];
+        
+        // Common size keywords
+        const sizeKeywords = ['small', 'medium', 'large', 'xs', 'xl', 'xxl', 'inches', 'cm', 'mm', 'adjustable', 'one size', 'diameter', 'length', 'width'];
+        
+        // Check if contains color keywords
+        const hasColors = colorKeywords.some(color => str.includes(color));
+        
+        // Check if contains size keywords
+        const hasSizes = sizeKeywords.some(size => str.includes(size));
+        
+        if (hasColors && !hasSizes) return 'colors';
+        if (hasSizes && !hasColors) return 'sizes';
+        if (hasColors && hasSizes) return 'mixed';
+        
+        return 'unknown';
+      };
+
+      // Intelligently map colors and sizes based on content
+      const rawColorsField = splitPipeValues(p.colors_available);
+      const rawSizesField = splitPipeValues(p.sizes_available);
+      
+      const colorsFieldType = detectDataType(p.colors_available);
+      const sizesFieldType = detectDataType(p.sizes_available);
+      
+      let actualColors = [];
+      let actualSizes = [];
+      
+      // Smart mapping based on content detection
+      if (colorsFieldType === 'colors') {
+        actualColors = rawColorsField;
+      } else if (colorsFieldType === 'sizes') {
+        actualSizes = rawColorsField;
+      } else {
+        actualColors = rawColorsField; // Default to colors if unknown
+      }
+      
+      if (sizesFieldType === 'sizes') {
+        actualSizes = rawSizesField;
+      } else if (sizesFieldType === 'colors') {
+        actualColors = rawSizesField;
+      } else {
+        actualSizes = rawSizesField; // Default to sizes if unknown
+      }
+      
+      // If we still don't have colors, try to get them from sizes field
+      if (actualColors.length === 0 && sizesFieldType === 'colors') {
+        actualColors = rawSizesField;
+      }
+      
+      // If we still don't have sizes, try to get them from colors field
+      if (actualSizes.length === 0 && colorsFieldType === 'sizes') {
+        actualSizes = rawColorsField;
+      }
+
       return {
         id: p.product_id,
         name: p.product_name,
@@ -438,12 +502,14 @@ async function generateJSONOutput() {
         description: p.description,
         material: p.material,
         weight: p.weight_grams,
-        size: p.length_size,
-        colors: p.colors_available ? p.colors_available.split('|').map(c => c.trim()).filter(Boolean) : [],
-        sizes: p.sizes_available ? p.sizes_available.split('|').map(s => s.trim()).filter(Boolean) : [],
+        size: p.sizes_available, // This now contains actual size info
+        // INTELLIGENT MAPPING: Detect and map colors/sizes based on content
+        colors: actualColors,
+        sizes: actualSizes,
+        variants: splitPipeValues(p.product_variants), // Contains product variants
         style: p.style,
         occasion: p.occasion,
-        features: p.features ? p.features.split('|').map(f => f.trim()).filter(Boolean) : [],
+        features: splitPipeValues(p.features),
         rating: p.rating || 0,
         reviews: p.reviews_count || 0,
         inStock: Boolean(p.in_stock),
@@ -451,13 +517,13 @@ async function generateJSONOutput() {
         isSale: Boolean(p.is_sale),
         careInstructions: p.care_instructions,
         sku: p.sku,
-        brand: p.brand,
+        brand: p.brand || "Nurvi Jewel",
         collection: p.collection,
-        tags: p.tags ? p.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
+        tags: splitPipeValues(p.tags || p.collection),
         seoTitle: p.seo_title,
         seoDescription: p.seo_description,
         dateAdded: p.date_added,
-        lastUpdated: p.last_updated,
+        lastUpdated: p.last_updated || new Date().toISOString(),
         inventory: {
           stock: p.stock_quantity || 0,
           minimumStock: p.minimum_stock || 0,
@@ -471,6 +537,7 @@ async function generateJSONOutput() {
           socialMediaTags: p.social_media_tags,
           instagramHashtags: p.instagram_hashtags
         },
+
         // Keep original database fields for backward compatibility
         ...p
       };

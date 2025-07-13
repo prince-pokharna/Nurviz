@@ -9,7 +9,7 @@ This guide will help you set up email functionality for OTP verification in your
 2. Navigate to "Security" 
 3. Enable "2-Step Verification"
 
-### S
+### Step 2: Generate App Password
 1. In Gmail Security settings, find "App passwords"
 2. Generate a new app password for "Mail"
 3. Copy the 16-character password (e.g., `abcd efgh ijkl mnop`)

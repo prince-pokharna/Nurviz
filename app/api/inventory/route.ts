@@ -106,14 +106,28 @@ export async function GET() {
         earrings: (inventory.categories?.earrings || inventory.earrings || []).map(transformProduct),
         bracelets: (inventory.categories?.bracelets || inventory.bracelets || []).map(transformProduct),
         anklets: (inventory.categories?.anklets || inventory.anklets || []).map(transformProduct)
+      },
+      metadata: {
+        lastUpdated: new Date().toISOString(),
+        totalProducts: inventory.all?.length || 0,
+        environment: process.env.VERCEL ? 'vercel' : 'local',
+        cacheBreaker: Date.now()
       }
     };
 
     console.log(`✅ Successfully fetched ${transformedData.all.length} products`);
     console.log(`📊 Sample product sizes: ${transformedData.all[0]?.sizes?.join(', ') || 'None'}`);
     console.log(`📊 Sample product colors: ${transformedData.all[0]?.colors?.join(', ') || 'None'}`);
+    console.log(`⏰ Inventory last updated: ${new Date().toISOString()}`);
     
-    return NextResponse.json(transformedData);
+    return NextResponse.json(transformedData, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Last-Modified': new Date().toUTCString()
+      }
+    });
     
   } catch (error) {
     console.error('❌ Error fetching inventory:', error);

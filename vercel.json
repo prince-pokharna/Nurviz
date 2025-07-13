@@ -7,8 +7,10 @@
   },
   "env": {
     "NODE_ENV": "production",
-    "VERCEL_ENV": "production"
+    "VERCEL_ENV": "production",
+    "VERCEL": "1"
   },
+  "buildCommand": "npm run build:vercel",
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -30,17 +32,53 @@
         {
           "key": "X-XSS-Protection",
           "value": "1; mode=block"
-        },
+        }
+      ]
+    },
+    {
+      "source": "/static/(.*)",
+      "headers": [
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
         }
       ]
+    },
+    {
+      "source": "/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/images/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     }
-  ],
-  "build": {
-    "env": {
-      "VERCEL": "1"
-    }
-  }
+  ]
 } 

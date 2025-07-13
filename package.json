@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "npm run init-db && next build",
-    "build:vercel": "next build",
+    "build:vercel": "npm run prepare-deployment && next build",
+    "prepare-deployment": "node scripts/prepare-deployment.js",
     "build:local": "npm run init-db && next build && npm run sync-inventory",
     "start": "next start",
     "lint": "next lint",
@@ -17,8 +18,7 @@
     "migrate-data": "node scripts/migrate-json-to-db.js",
     "auto-extract": "node scripts/auto-extract-images-advanced.js",
     "setup-images": "node scripts/setup-image-structure.js",
-    "setup": "npm install && npm run init-db",
-    "postinstall": "npm run init-db"
+    "setup": "npm install && npm run init-db"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",

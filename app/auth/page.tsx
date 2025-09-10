@@ -24,6 +24,7 @@ export default function AuthPage() {
   const [otpValue, setOtpValue] = useState("")
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("")
   const [resetEmailSent, setResetEmailSent] = useState(false)
+  const [isDevelopmentMode, setIsDevelopmentMode] = useState(false)
   const { login, register, verifyOTP, resendOTP, isAuthenticated } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -56,6 +57,20 @@ export default function AuthPage() {
       router.push("/account")
     }
   }, [isAuthenticated, router])
+
+  // Check if we're in development mode
+  useEffect(() => {
+    const checkDevelopmentMode = async () => {
+      try {
+        const response = await fetch('/api/test-email')
+        const result = await response.json()
+        setIsDevelopmentMode(result.developmentMode === true)
+      } catch (error) {
+        setIsDevelopmentMode(true) // Assume development mode if check fails
+      }
+    }
+    checkDevelopmentMode()
+  }, [])
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -272,6 +287,14 @@ export default function AuthPage() {
               <Shield className="w-16 h-16 text-amber-600 mx-auto mb-4" />
               <h1 className="text-3xl font-bold gradient-text font-playfair mb-2">Verify Your Email</h1>
               <p className="text-gray-600">Enter the 6-digit code sent to {pendingEmail}</p>
+              
+              {isDevelopmentMode && (
+                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-800 font-medium mb-2">🧪 Development Mode</p>
+                  <p className="text-xs text-blue-600 mb-2">Email not configured. Check browser console for OTP.</p>
+                  <p className="text-xs text-blue-600">Press F12 → Console tab → Look for "OTP for testing"</p>
+                </div>
+              )}
             </div>
 
             <Card className="premium-card shadow-xl">
@@ -498,6 +521,13 @@ export default function AuthPage() {
                     >
                       {isLoading ? "Creating account..." : "Create Account"}
                     </Button>
+
+                    {isDevelopmentMode && (
+                      <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <p className="text-xs text-yellow-800 font-medium mb-1">🧪 Development Mode</p>
+                        <p className="text-xs text-yellow-700">After registration, check browser console (F12) for OTP code.</p>
+                      </div>
+                    )}
 
                     <p className="text-xs text-gray-600 text-center">
                       By creating an account, you agree to our{" "}

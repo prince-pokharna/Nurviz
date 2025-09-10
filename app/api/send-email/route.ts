@@ -5,33 +5,82 @@ export async function POST(request: NextRequest) {
   console.log('=== Email API Called ===');
   
   try {
-    // Log environment variables for debugging
-    console.log('Environment check:');
-    console.log('- EMAIL_USER:', process.env.EMAIL_USER ? '✓ Set' : '✗ Missing');
-    console.log('- EMAIL_PASS:', process.env.EMAIL_PASS ? '✓ Set' : '✗ Missing');
-    console.log('- EMAIL_FROM:', process.env.EMAIL_FROM ? '✓ Set' : '✗ Missing');
-
     const { to, subject, otp, type, name } = await request.json()
     console.log('Email Request:', { to, subject, type, nameProvided: !!name });
 
     // Check if all required credentials are present
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || !process.env.EMAIL_FROM) {
-      console.error('❌ Missing email credentials');
+      console.error('❌ Missing email credentials - using development mode');
+      
+      // In development, simulate successful email sending
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔧 Development mode: Simulating email send');
+        console.log(`📧 Would send OTP ${otp} to ${to} for ${type}`);
+        
+        // Store OTP in a way that can be retrieved for testing
+        const testOTPData = {
+          email: to,
+          otp: otp,
+          type: type,
+          timestamp: new Date().toISOString()
+        };
+        
+        // In a real scenario, you'd store this in a database
+        // For now, we'll just log it
+        console.log('🧪 Test OTP Data:', testOTPData);
+        
+        return NextResponse.json({
+          success: true,
+          messageId: 'dev-' + Date.now(),
+          message: 'Email sent successfully (development mode)',
+          development: true,
+          otp: otp // Include OTP in response for testing
+        });
+      }
+      
       return NextResponse.json({ 
         success: false, 
         error: "Email configuration missing",
-        details: "Please check your .env.local file for email credentials"
+        details: "Please configure email credentials in .env.local file",
+        setupInstructions: {
+          gmail: "1. Enable 2FA on Gmail\n2. Generate App Password\n3. Set EMAIL_USER and EMAIL_PASS in .env.local",
+          outlook: "1. Use your Outlook credentials\n2. Set EMAIL_USER and EMAIL_PASS in .env.local"
+        }
       }, { status: 500 });
     }
 
-    // Create transporter
-    const transporter = nodemailer.createTransport({
-      service: 'gmail', // or your email service
+    // Create transporter with flexible configuration
+    let transporterConfig: any = {
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, // Use App Password for Gmail
+        pass: process.env.EMAIL_PASS,
       },
-    });
+    };
+
+    // Configure based on email provider
+    if (process.env.EMAIL_HOST) {
+      // Custom SMTP configuration
+      transporterConfig = {
+        host: process.env.EMAIL_HOST,
+        port: parseInt(process.env.EMAIL_PORT || '587'),
+        secure: process.env.EMAIL_SECURE === 'true',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      };
+    } else if (process.env.EMAIL_USER?.includes('@gmail.com')) {
+      // Gmail configuration
+      transporterConfig.service = 'gmail';
+    } else if (process.env.EMAIL_USER?.includes('@outlook.com') || process.env.EMAIL_USER?.includes('@hotmail.com')) {
+      // Outlook/Hotmail configuration
+      transporterConfig.service = 'hotmail';
+    } else {
+      // Default to Gmail
+      transporterConfig.service = 'gmail';
+    }
+
+    const transporter = nodemailer.createTransport(transporterConfig);
 
     // Verify transporter configuration
     console.log('Verifying email configuration...');

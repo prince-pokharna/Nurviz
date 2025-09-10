@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Facebook, Instagram, Twitter, Youtube, MapPin, Phone, Mail } from "lucide-react"
+import { Facebook, Instagram, Twitter, Youtube, MapPin, Phone, Mail, Shield } from "lucide-react"
 
 export default function Footer() {
   return (
@@ -146,6 +146,14 @@ export default function Footer() {
               </Link>
               <Link href="/shipping" className="text-cream-400 hover:text-luxury-400 text-sm transition-colors">
                 Shipping Policy
+              </Link>
+              <Link 
+                href="/admin" 
+                className="text-cream-500 hover:text-luxury-300 text-xs transition-colors opacity-50 hover:opacity-100 flex items-center gap-1"
+                title="Admin Access"
+              >
+                <Shield className="w-3 h-3" />
+                <span className="sr-only">Admin</span>
               </Link>
             </div>
           </div>

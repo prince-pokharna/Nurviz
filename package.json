@@ -14,6 +14,8 @@
     "sync-inventory": "node scripts/sync-inventory-enhanced.js",
     "sync-legacy": "node scripts/sync-inventory.js",
     "auto-csv": "node scripts/auto-csv-download.js",
+    "daily-excel": "node scripts/daily-excel-order-book.js",
+    "generate-order-book": "node scripts/daily-excel-order-book.js",
     "reset-db": "rm -f data/nurvi_jewels.db && npm run init-db",
     "migrate-data": "node scripts/migrate-json-to-db.js",
     "auto-extract": "node scripts/auto-extract-images-advanced.js",

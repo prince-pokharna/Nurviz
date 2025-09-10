@@ -248,6 +248,46 @@
       "instagram_hashtags": "#diamondring #luxury #engagement #sparkle #brilliant",
       "date_added": "2025-07-24T16:34:21.167Z",
       "last_updated": "2025-07-24T16:34:21.167Z"
+    },
+    {
+      "name": "royal jhumka",
+      "price": 500,
+      "originalPrice": 988,
+      "description": "sadfsdgfaghfb sarfgfdg",
+      "material": "gold plated",
+      "weight": 15,
+      "images": [
+        "/images/products/general/upload-1757528511523-0.png"
+      ],
+      "image": "/images/products/general/upload-1757528511523-0.png",
+      "inventory": {
+        "stock": 2,
+        "minimumStock": "1"
+      },
+      "sku": "RG004",
+      "collection": "royal collection",
+      "rating": 4.8,
+      "reviews": 25,
+      "customerReviews": "SARsdgkdfsjagasf",
+      "reviewerName": "Sonali Jain",
+      "lastUpdated": "2025-09-10T18:21:51.692Z",
+      "dateAdded": "2025-09-10T18:21:51.692Z",
+      "brand": "Nurvi Jewel",
+      "id": "jewelry-1757527378034",
+      "gemstone": "",
+      "sizes": [],
+      "colors": [],
+      "style": "",
+      "occasion": "",
+      "features": [],
+      "inStock": true,
+      "isNew": false,
+      "isSale": true,
+      "tags": [
+        "royal collection"
+      ],
+      "createdAt": "",
+      "updatedAt": ""
     }
   ],
   "featured": [

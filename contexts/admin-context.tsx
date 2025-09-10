@@ -2,14 +2,8 @@
 
 import type React from "react"
 import { createContext, useContext, useState, useEffect } from "react"
-
-interface AdminUser {
-  id: string
-  email: string
-  name: string
-  role: "super_admin" | "admin" | "manager"
-  permissions: string[]
-}
+import { AdminUser, hasPermission as checkPermission } from "@/lib/admin-auth"
+import { AdminPermission } from "@/lib/admin-config"
 
 interface AdminState {
   admin: AdminUser | null
@@ -20,7 +14,8 @@ interface AdminState {
 interface AdminContextType extends AdminState {
   login: (email: string, password: string) => Promise<void>
   logout: () => void
-  hasPermission: (permission: string) => boolean
+  hasPermission: (permission: AdminPermission) => boolean
+  refreshAuth: () => Promise<void>
 }
 
 const AdminContext = createContext<AdminContextType | null>(null)
@@ -32,53 +27,87 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated: false,
   })
 
+  // Verify authentication on mount
   useEffect(() => {
-    // Check for saved admin session
-    const savedAdmin = localStorage.getItem("nurvi-admin")
-    if (savedAdmin) {
-      setState({
-        admin: JSON.parse(savedAdmin),
-        isLoading: false,
-        isAuthenticated: true,
-      })
-    } else {
-      setState((prev) => ({ ...prev, isLoading: false }))
-    }
+    verifyAuth()
   }, [])
 
-  const login = async (email: string, password: string) => {
-    // Demo admin credentials - replace with real authentication
-    if (email === "admin@nurvijewel.com" && password === "admin123") {
-      const admin = {
-        id: "admin-1",
-        email,
-        name: "Admin User",
-        role: "super_admin" as const,
-        permissions: [
-          "view_customers",
-          "edit_customers",
-          "delete_customers",
-          "view_orders",
-          "edit_orders",
-          "view_analytics",
-          "manage_products",
-          "manage_settings",
-        ],
-      }
-
-      localStorage.setItem("nurvi-admin", JSON.stringify(admin))
-      setState({
-        admin,
-        isLoading: false,
-        isAuthenticated: true,
+  const verifyAuth = async () => {
+    try {
+      const response = await fetch('/api/admin/auth/verify', {
+        method: 'GET',
+        credentials: 'include',
       })
-    } else {
-      throw new Error("Invalid credentials")
+
+      if (response.ok) {
+        const data = await response.json()
+        setState({
+          admin: data.admin,
+          isLoading: false,
+          isAuthenticated: true,
+        })
+      } else {
+        setState({
+          admin: null,
+          isLoading: false,
+          isAuthenticated: false,
+        })
+      }
+    } catch (error) {
+      console.error('Auth verification failed:', error)
+      setState({
+        admin: null,
+        isLoading: false,
+        isAuthenticated: false,
+      })
     }
   }
 
-  const logout = () => {
-    localStorage.removeItem("nurvi-admin")
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await fetch('/api/admin/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setState({
+          admin: data.admin,
+          isLoading: false,
+          isAuthenticated: true,
+        })
+        
+        // Store token in localStorage as backup
+        if (data.token) {
+          localStorage.setItem("nurvi-admin-token", data.token)
+        }
+      } else {
+        throw new Error(data.error || 'Login failed')
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      throw error
+    }
+  }
+
+  const logout = async () => {
+    try {
+      await fetch('/api/admin/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      })
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
+
+    // Clear local storage and state
+    localStorage.removeItem("nurvi-admin-token")
     setState({
       admin: null,
       isLoading: false,
@@ -86,11 +115,21 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     })
   }
 
-  const hasPermission = (permission: string) => {
-    return state.admin?.permissions.includes(permission) || false
+  const hasPermission = (permission: AdminPermission) => {
+    return checkPermission(state.admin, permission)
   }
 
-  return <AdminContext.Provider value={{ ...state, login, logout, hasPermission }}>{children}</AdminContext.Provider>
+  const refreshAuth = async () => {
+    await verifyAuth()
+  }
+
+  return (
+    <AdminContext.Provider 
+      value={{ ...state, login, logout, hasPermission, refreshAuth }}
+    >
+      {children}
+    </AdminContext.Provider>
+  )
 }
 
 export function useAdmin() {

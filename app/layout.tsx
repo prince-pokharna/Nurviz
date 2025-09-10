@@ -11,6 +11,7 @@ import { Toaster } from "@/components/ui/toaster"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import LoadingScreen from "@/components/loading-screen"
+import AdminAccessShortcut from "@/components/admin-access-shortcut"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -43,6 +44,7 @@ export default function RootLayout({
             <WishlistProvider>
               <CartProvider>
                 <LoadingScreen />
+                <AdminAccessShortcut />
                 <Header />
                 {children}
                 <Footer />

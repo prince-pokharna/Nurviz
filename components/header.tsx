@@ -68,7 +68,7 @@ export default function Header() {
                 </div>
                 <div className="absolute inset-0 w-12 h-12 luxury-gradient rounded-full opacity-0 group-hover:opacity-30 blur-lg transition-all duration-300"></div>
               </div>
-              <span className="text-3xl font-bold gradient-text font-serif">Nurvi Jewel</span>
+              <span className="text-3xl font-bold gradient-text font-serif" data-admin-trigger>Nurvi Jewel</span>
             </Link>
 
             {/* Desktop Navigation */}

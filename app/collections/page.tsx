@@ -74,7 +74,7 @@ export default function CollectionsPage() {
     
     // Filter by styles if selected
     if (selectedStyles.length > 0) {
-      const productStyle = product.style || ""
+      const productStyle = (product.style || "").toString()
       const hasMatchingStyle = selectedStyles.some(style => 
         productStyle.toLowerCase().includes(style.toLowerCase())
       )
@@ -83,7 +83,7 @@ export default function CollectionsPage() {
     
     // Filter by materials if selected
     if (selectedMaterials.length > 0) {
-      const productMaterial = product.material || ""
+      const productMaterial = (product.material || "").toString()
       const hasMatchingMaterial = selectedMaterials.some(material => 
         productMaterial.toLowerCase().includes(material.toLowerCase())
       )
@@ -92,7 +92,7 @@ export default function CollectionsPage() {
     
     // Filter by occasions if selected
     if (selectedOccasions.length > 0) {
-      const productOccasion = product.occasion || ""
+      const productOccasion = (product.occasion || "").toString()
       const hasMatchingOccasion = selectedOccasions.some(occasion => 
         productOccasion.toLowerCase().includes(occasion.toLowerCase())
       )

@@ -33,7 +33,7 @@ export default function BraceletsPage() {
     
     // Filter by materials if selected
     if (selectedMaterials.length > 0) {
-      const productMaterial = bracelet.material || bracelet.specifications?.Material || ""
+      const productMaterial = (bracelet.material || bracelet.specifications?.Material || "").toString()
       const hasMatchingMaterial = selectedMaterials.some(material => 
         productMaterial.toLowerCase().includes(material.toLowerCase())
       )
@@ -42,7 +42,7 @@ export default function BraceletsPage() {
 
     // Filter by styles if selected
     if (selectedStyles.length > 0) {
-      const productStyle = bracelet.style || bracelet.specifications?.Style || ""
+      const productStyle = (bracelet.style || bracelet.specifications?.Style || "").toString()
       const hasMatchingStyle = selectedStyles.some(style => 
         productStyle.toLowerCase().includes(style.toLowerCase())
       )
@@ -51,7 +51,7 @@ export default function BraceletsPage() {
 
     // Filter by occasions if selected
     if (selectedOccasions.length > 0) {
-      const productOccasion = bracelet.occasion || bracelet.specifications?.Occasion || ""
+      const productOccasion = (bracelet.occasion || bracelet.specifications?.Occasion || "").toString()
       const hasMatchingOccasion = selectedOccasions.some(occasion => 
         productOccasion.toLowerCase().includes(occasion.toLowerCase())
       )
@@ -68,7 +68,7 @@ export default function BraceletsPage() {
       case "price-high":
         return b.price - a.price
       case "rating":
-        return b.rating - a.rating
+        return (b.rating || 0) - (a.rating || 0)
       case "newest":
         return b.isNew === a.isNew ? 0 : b.isNew ? 1 : -1
       default:

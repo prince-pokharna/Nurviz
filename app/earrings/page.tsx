@@ -21,6 +21,12 @@ export default function EarringsPage() {
   const [selectedStyles, setSelectedStyles] = useState<string[]>([])
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([])
 
+  // Helper function to safely convert to string
+  const safeString = (value: any): string => {
+    if (value === null || value === undefined) return "";
+    return String(value);
+  }
+
   // Get earrings from centralized inventory
   const earrings = getProductsByCategory("Earrings")
 
@@ -33,7 +39,7 @@ export default function EarringsPage() {
     
     // Filter by materials if selected
     if (selectedMaterials.length > 0) {
-      const productMaterial = earring.material || earring.specifications?.Material || ""
+      const productMaterial = safeString(earring.material || earring.specifications?.Material)
       const hasMatchingMaterial = selectedMaterials.some(material => 
         productMaterial.toLowerCase().includes(material.toLowerCase())
       )
@@ -42,7 +48,7 @@ export default function EarringsPage() {
 
     // Filter by styles if selected
     if (selectedStyles.length > 0) {
-      const productStyle = earring.style || earring.specifications?.Style || ""
+      const productStyle = safeString(earring.style || earring.specifications?.Style)
       const hasMatchingStyle = selectedStyles.some(style => 
         productStyle.toLowerCase().includes(style.toLowerCase())
       )
@@ -51,7 +57,7 @@ export default function EarringsPage() {
 
     // Filter by occasions if selected
     if (selectedOccasions.length > 0) {
-      const productOccasion = earring.occasion || earring.specifications?.Occasion || ""
+      const productOccasion = safeString(earring.occasion || earring.specifications?.Occasion)
       const hasMatchingOccasion = selectedOccasions.some(occasion => 
         productOccasion.toLowerCase().includes(occasion.toLowerCase())
       )
@@ -68,7 +74,7 @@ export default function EarringsPage() {
       case "price-high":
         return b.price - a.price
       case "rating":
-        return b.rating - a.rating
+        return (b.rating || 0) - (a.rating || 0)
       case "newest":
         return b.isNew === a.isNew ? 0 : b.isNew ? 1 : -1
       default:

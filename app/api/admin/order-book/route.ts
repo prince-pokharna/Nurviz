@@ -12,19 +12,24 @@ export async function GET(request: NextRequest) {
     const action = searchParams.get('action');
 
     if (action === 'generate') {
-      // Manually trigger Excel generation
+      // Manually trigger Excel generation via child process
       console.log('📊 Manually triggering Excel order book generation...');
       
-      const scriptPath = path.join(process.cwd(), 'scripts', 'daily-excel-order-book.js');
-      const { generateDailyOrderBook } = require(scriptPath);
-      
-      const filePath = await generateDailyOrderBook();
-      
-      return NextResponse.json({
-        success: true,
-        message: 'Excel order book generated successfully',
-        filePath: filePath
-      });
+      try {
+        const { stdout, stderr } = await execAsync(`node "${path.join(process.cwd(), 'scripts', 'daily-excel-order-book.js')}"`);
+        
+        if (stderr) {
+          console.error('Script stderr:', stderr);
+        }
+        
+        return NextResponse.json({
+          success: true,
+          message: 'Excel order book generated successfully',
+          output: stdout
+        });
+      } catch (error) {
+        throw new Error(`Excel generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
     }
 
     if (action === 'list') {

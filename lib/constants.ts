@@ -160,10 +160,36 @@ export const getProductById = (id: string): Product | undefined => {
   return PRODUCTS.find(product => product.id === id);
 };
 
+// Helper function to safely convert values to strings
+const safeString = (value: any): string => {
+  if (value === null || value === undefined) return "";
+  return String(value);
+};
+
+// Helper function to sanitize product data
+const sanitizeProduct = (product: any): Product => {
+  return {
+    ...product,
+    material: safeString(product.material),
+    style: safeString(product.style),
+    occasion: safeString(product.occasion),
+    rating: product.rating || 0,
+    specifications: product.specifications ? {
+      ...product.specifications,
+      Material: safeString(product.specifications.Material),
+      Style: safeString(product.specifications.Style),
+      Occasion: safeString(product.specifications.Occasion),
+      Stone: safeString(product.specifications.Stone)
+    } : undefined
+  };
+};
+
 export const getProductsByCategory = (category: string): Product[] => {
-  return PRODUCTS.filter(product => 
-    product.category.toLowerCase().includes(category.toLowerCase())
-  );
+  return PRODUCTS
+    .filter(product => 
+      safeString(product.category).toLowerCase().includes(category.toLowerCase())
+    )
+    .map(sanitizeProduct);
 };
 
 export const getProductsBySection = (section: string): Product[] => {

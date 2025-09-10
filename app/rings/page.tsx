@@ -33,7 +33,7 @@ export default function RingsPage() {
     
     // Filter by materials if selected
     if (selectedMaterials.length > 0) {
-      const productMaterial = ring.material || ring.specifications?.Material || ""
+      const productMaterial = (ring.material || ring.specifications?.Material || "").toString()
       const hasMatchingMaterial = selectedMaterials.some(material => 
         productMaterial.toLowerCase().includes(material.toLowerCase())
       )
@@ -42,7 +42,7 @@ export default function RingsPage() {
 
     // Filter by gemstones if selected
     if (selectedGemstones.length > 0) {
-      const productStone = ring.stone || ring.specifications?.Stone || ""
+      const productStone = (ring.stone || ring.specifications?.Stone || "").toString()
       const hasMatchingGemstone = selectedGemstones.some(gemstone => 
         productStone.toLowerCase().includes(gemstone.toLowerCase())
       )
@@ -51,7 +51,7 @@ export default function RingsPage() {
 
     // Filter by occasions if selected
     if (selectedOccasions.length > 0) {
-      const productOccasion = ring.occasion || ring.specifications?.Occasion || ""
+      const productOccasion = (ring.occasion || ring.specifications?.Occasion || "").toString()
       const hasMatchingOccasion = selectedOccasions.some(occasion => 
         productOccasion.toLowerCase().includes(occasion.toLowerCase())
       )
@@ -68,7 +68,7 @@ export default function RingsPage() {
       case "price-high":
         return b.price - a.price
       case "rating":
-        return b.rating - a.rating
+        return (b.rating || 0) - (a.rating || 0)
       case "newest":
         return b.isNew === a.isNew ? 0 : b.isNew ? 1 : -1
       default:

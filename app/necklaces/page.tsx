@@ -33,7 +33,7 @@ export default function NecklacesPage() {
     
     // Filter by materials if selected
     if (selectedMaterials.length > 0) {
-      const productMaterial = necklace.material || necklace.specifications?.Material || ""
+      const productMaterial = (necklace.material || necklace.specifications?.Material || "").toString()
       const hasMatchingMaterial = selectedMaterials.some(material => 
         productMaterial.toLowerCase().includes(material.toLowerCase())
       )
@@ -42,7 +42,7 @@ export default function NecklacesPage() {
 
     // Filter by styles if selected
     if (selectedStyles.length > 0) {
-      const productStyle = necklace.style || necklace.specifications?.Style || ""
+      const productStyle = (necklace.style || necklace.specifications?.Style || "").toString()
       const hasMatchingStyle = selectedStyles.some(style => 
         productStyle.toLowerCase().includes(style.toLowerCase())
       )
@@ -59,7 +59,7 @@ export default function NecklacesPage() {
       case "price-high":
         return b.price - a.price
       case "rating":
-        return b.rating - a.rating
+        return (b.rating || 0) - (a.rating || 0)
       case "newest":
         return b.isNew === a.isNew ? 0 : b.isNew ? 1 : -1
       default:

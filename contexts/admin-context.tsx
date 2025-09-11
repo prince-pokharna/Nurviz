@@ -29,24 +29,30 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   // Verify authentication on mount
   useEffect(() => {
+    console.log('🔍 Admin context mounting, verifying auth...')
     verifyAuth()
   }, [])
 
   const verifyAuth = async () => {
     try {
+      console.log('🔍 Verifying admin authentication...')
       const response = await fetch('/api/admin/auth/verify', {
         method: 'GET',
         credentials: 'include',
       })
 
+      console.log('📡 Auth verification response status:', response.status)
+
       if (response.ok) {
         const data = await response.json()
+        console.log('✅ Auth verification successful:', data)
         setState({
           admin: data.admin,
           isLoading: false,
           isAuthenticated: true,
         })
       } else {
+        console.log('❌ Auth verification failed')
         setState({
           admin: null,
           isLoading: false,
@@ -54,7 +60,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         })
       }
     } catch (error) {
-      console.error('Auth verification failed:', error)
+      console.error('❌ Auth verification error:', error)
       setState({
         admin: null,
         isLoading: false,
@@ -65,6 +71,8 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
+      console.log('🔐 Admin context login called:', { email, passwordLength: password.length })
+      
       const response = await fetch('/api/admin/auth/login', {
         method: 'POST',
         headers: {
@@ -74,9 +82,12 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         body: JSON.stringify({ email, password }),
       })
 
+      console.log('📡 Login response status:', response.status)
       const data = await response.json()
+      console.log('📡 Login response data:', data)
 
       if (response.ok && data.success) {
+        console.log('✅ Admin context login successful')
         setState({
           admin: data.admin,
           isLoading: false,
@@ -88,10 +99,11 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
           localStorage.setItem("nurvi-admin-token", data.token)
         }
       } else {
+        console.log('❌ Admin context login failed:', data.error)
         throw new Error(data.error || 'Login failed')
       }
     } catch (error) {
-      console.error('Login error:', error)
+      console.error('❌ Admin context login error:', error)
       throw error
     }
   }

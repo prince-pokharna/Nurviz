@@ -386,13 +386,16 @@ export default function AdminLoginPage() {
     setIsLoading(true)
 
     try {
+      console.log('🔐 Frontend login attempt:', { email, passwordLength: password.length })
       await login(email, password)
+      console.log('✅ Frontend login successful')
       toast({
         title: "Login Successful",
         description: "Welcome to Nurvi Jewel Admin Panel",
       })
       // Don't manually redirect - let useEffect handle it
     } catch (error) {
+      console.error('❌ Frontend login error:', error)
       let errorMessage = "Invalid email or password"
       if (error instanceof Error) {
         errorMessage = error.message

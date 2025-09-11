@@ -418,13 +418,6 @@ export default function AdminLoginPage() {
           <div>
             <CardTitle className="text-2xl font-bold text-gray-900">Admin Login</CardTitle>
             <CardDescription className="text-gray-600">Access Nurvi Jewel Admin Panel</CardDescription>
-            
-            {/* Development credentials helper */}
-            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-800 font-medium mb-2">🔐 Admin Credentials</p>
-              <p className="text-xs text-blue-600 mb-1"><strong>Email:</strong> owner@nurvijewel.com</p>
-              <p className="text-xs text-blue-600"><strong>Password:</strong> nurvi2024secure</p>
-            </div>
           </div>
         </CardHeader>
         <CardContent>

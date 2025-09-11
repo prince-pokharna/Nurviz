@@ -386,16 +386,27 @@ export default function AdminLoginPage() {
     setIsLoading(true)
 
     try {
+      console.log('🔐 Attempting admin login:', { email, passwordLength: password.length })
+      
       await login(email, password)
+      
+      console.log('✅ Admin login successful')
       toast({
         title: "Login Successful",
         description: "Welcome to Nurvi Jewel Admin Panel",
       })
       // Don't manually redirect - let useEffect handle it
     } catch (error) {
+      console.error('❌ Login error:', error)
+      
+      let errorMessage = "Invalid email or password"
+      if (error instanceof Error) {
+        errorMessage = error.message
+      }
+      
       toast({
         title: "Login Failed",
-        description: "Invalid email or password",
+        description: errorMessage,
         variant: "destructive",
       })
     } finally {
@@ -413,6 +424,13 @@ export default function AdminLoginPage() {
           <div>
             <CardTitle className="text-2xl font-bold text-gray-900">Admin Login</CardTitle>
             <CardDescription className="text-gray-600">Access Nurvi Jewel Admin Panel</CardDescription>
+            
+            {/* Development credentials helper */}
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-800 font-medium mb-2">🔐 Admin Credentials</p>
+              <p className="text-xs text-blue-600 mb-1"><strong>Email:</strong> owner@nurvijewel.com</p>
+              <p className="text-xs text-blue-600"><strong>Password:</strong> nurvi2024secure</p>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -426,7 +444,7 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@nurvijewel.com"
+                placeholder="owner@nurvijewel.com"
                 required
                 className="border-gray-300 focus:border-[#9E8E80] focus:ring-[#9E8E80]"
               />

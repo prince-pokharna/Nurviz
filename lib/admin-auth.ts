@@ -54,8 +54,16 @@ export function verifyToken(token: string): JWTPayload | null {
 // Get admin user by email and password
 export async function authenticateAdmin(email: string, password: string): Promise<AdminUser | null> {
   try {
+    console.log('🔐 Admin authentication attempt:', {
+      email,
+      expectedEmail: ADMIN_CONFIG.ADMIN_EMAIL,
+      nodeEnv: process.env.NODE_ENV,
+      passwordLength: password.length
+    })
+
     // Check if email matches admin email
     if (email !== ADMIN_CONFIG.ADMIN_EMAIL) {
+      console.log('❌ Email mismatch:', { provided: email, expected: ADMIN_CONFIG.ADMIN_EMAIL })
       return null
     }
 
@@ -64,17 +72,24 @@ export async function authenticateAdmin(email: string, password: string): Promis
     const isDevelopment = process.env.NODE_ENV !== 'production'
     let isValid = false
     
+    console.log('🔍 Environment check:', { isDevelopment, nodeEnv: process.env.NODE_ENV })
+    
     if (isDevelopment) {
       // Simple password check for development
       isValid = password === 'nurvi2024secure'
+      console.log('🧪 Development password check:', { isValid, provided: password, expected: 'nurvi2024secure' })
     } else {
       // Use hashed password in production
       isValid = await verifyPassword(password, ADMIN_CONFIG.ADMIN_PASSWORD_HASH)
+      console.log('🔒 Production password check:', { isValid })
     }
     
     if (!isValid) {
+      console.log('❌ Password validation failed')
       return null
     }
+
+    console.log('✅ Admin authentication successful')
 
     // Return admin user with full permissions
     return {
@@ -86,7 +101,7 @@ export async function authenticateAdmin(email: string, password: string): Promis
       loginTime: Date.now(),
     }
   } catch (error) {
-    console.error('Authentication error:', error)
+    console.error('❌ Authentication error:', error)
     return null
   }
 }

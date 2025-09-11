@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import bcryptjs from 'bcryptjs'
 import { ADMIN_CONFIG, ADMIN_PERMISSIONS, type AdminPermission } from './admin-config'
+import { getAdminConfig, verifyPassword as verifyPasswordUtil } from './admin-setup'
 
 export interface AdminUser {
   id: string
@@ -54,23 +55,15 @@ export function verifyToken(token: string): JWTPayload | null {
 // Get admin user by email and password
 export async function authenticateAdmin(email: string, password: string): Promise<AdminUser | null> {
   try {
+    const adminConfig = getAdminConfig()
+    
     // Check if email matches admin email
-    if (email !== ADMIN_CONFIG.ADMIN_EMAIL) {
+    if (email.toLowerCase().trim() !== adminConfig.email.toLowerCase().trim()) {
       return null
     }
 
-    // For development, use simple password check
-    // In production, use environment variables
-    const isDevelopment = process.env.NODE_ENV !== 'production'
-    let isValid = false
-    
-    if (isDevelopment) {
-      // Simple password check for development
-      isValid = password === 'nurvi2024secure'
-    } else {
-      // Use hashed password in production
-      isValid = await verifyPassword(password, ADMIN_CONFIG.ADMIN_PASSWORD_HASH)
-    }
+    // Verify password using bcrypt
+    const isValid = await verifyPasswordUtil(password, adminConfig.passwordHash)
     
     if (!isValid) {
       return null
@@ -79,8 +72,8 @@ export async function authenticateAdmin(email: string, password: string): Promis
     // Return admin user with full permissions
     return {
       id: 'admin-1',
-      email: ADMIN_CONFIG.ADMIN_EMAIL,
-      name: 'Admin User',
+      email: adminConfig.email,
+      name: adminConfig.name,
       role: 'super_admin',
       permissions: Object.values(ADMIN_PERMISSIONS),
       loginTime: Date.now(),

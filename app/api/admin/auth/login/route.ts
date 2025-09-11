@@ -51,11 +51,8 @@ export async function POST(request: NextRequest) {
     
     const { email, password } = await request.json()
     
-    console.log('🔐 Login API called:', { email, passwordLength: password?.length, ip })
-    
     // Validate input
     if (!email || !password) {
-      console.log('❌ Missing credentials')
       recordLoginAttempt(ip)
       return NextResponse.json(
         { error: 'Email and password are required' },
@@ -66,15 +63,12 @@ export async function POST(request: NextRequest) {
     // Authenticate admin
     const admin = await authenticateAdmin(email, password)
     if (!admin) {
-      console.log('❌ Authentication failed in API')
       recordLoginAttempt(ip)
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 }
       )
     }
-    
-    console.log('✅ Authentication successful in API')
     
     // Generate JWT token
     const token = generateToken(admin)
@@ -96,9 +90,10 @@ export async function POST(request: NextRequest) {
     response.cookies.set('admin-token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 24 * 60 * 60, // 24 hours
       path: '/',
+      domain: process.env.NODE_ENV === 'production' ? undefined : undefined,
     })
     
     return response

@@ -12,9 +12,10 @@ export async function POST(request: NextRequest) {
     response.cookies.set('admin-token', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 0, // Expire immediately
       path: '/',
+      domain: process.env.NODE_ENV === 'production' ? undefined : undefined,
     })
     
     return response

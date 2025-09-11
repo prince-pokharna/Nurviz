@@ -20,6 +20,7 @@
     "migrate-data": "node scripts/migrate-json-to-db.js",
     "auto-extract": "node scripts/auto-extract-images-advanced.js",
     "setup-images": "node scripts/setup-image-structure.js",
+    "setup-admin": "node scripts/setup-admin-credentials.js",
     "setup": "npm install && npm run init-db"
   },
   "dependencies": {

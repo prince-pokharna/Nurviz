@@ -213,18 +213,50 @@ export default function SimpleJewelryEditor({
         updatedProduct.id = `${category}-${timestamp}`;
       }
 
-      // Use the simple update endpoint that doesn't require complex authentication
-      const response = await fetch('/api/admin/simple-update', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          action: isCreating ? 'add_product' : 'update_product',
-          product: updatedProduct
-        }),
-      });
+      // Try Firebase product save first (works on Vercel), fallback to simple-update
+      let response;
+      try {
+        response = await fetch('/api/admin/products-save', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            action: isCreating ? 'add_product' : 'update_product',
+            product: updatedProduct
+          }),
+        });
+        
+        // If Firebase route doesn't exist or fails, try simple-update
+        if (!response.ok && response.status === 404) {
+          console.log('Firebase route not found, trying simple-update...');
+          response = await fetch('/api/admin/simple-update', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              action: isCreating ? 'add_product' : 'update_product',
+              product: updatedProduct
+            }),
+          });
+        }
+      } catch (fetchError) {
+        console.log('Primary save failed, trying fallback...');
+        response = await fetch('/api/admin/simple-update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            action: isCreating ? 'add_product' : 'update_product',
+            product: updatedProduct
+          }),
+        });
+      }
 
       if (response.ok) {
         toast({

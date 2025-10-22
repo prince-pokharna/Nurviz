@@ -9,6 +9,15 @@ export async function POST(request: NextRequest) {
     
     console.log('Simple update request:', { action, productId: product?.id, productName: product?.name });
     
+    // Validate product data
+    if (!product || !product.name || !product.price) {
+      console.error('Invalid product data:', product);
+      return NextResponse.json({ 
+        success: false,
+        error: 'Invalid product data. Name and price are required.' 
+      }, { status: 400 });
+    }
+    
     // Read current inventory
     const inventoryPath = path.join(process.cwd(), 'data', 'inventory.json');
     let inventory;
@@ -18,7 +27,23 @@ export async function POST(request: NextRequest) {
       inventory = JSON.parse(inventoryData);
     } catch (error) {
       console.error('Error reading inventory:', error);
-      return NextResponse.json({ error: 'Failed to read inventory' }, { status: 500 });
+      // Initialize empty inventory if file doesn't exist
+      inventory = {
+        all: [],
+        featured: [],
+        rings: [],
+        ringsPage: [],
+        necklaces: [],
+        necklacesPage: [],
+        earrings: [],
+        earringsPage: [],
+        bracelets: [],
+        braceletsPage: [],
+        anklets: [],
+        onSale: [],
+        newArrivals: [],
+        inStock: []
+      };
     }
 
     if (action === 'update_product') {
@@ -98,9 +123,31 @@ export async function POST(request: NextRequest) {
     }
 
     // Save updated inventory
-    await fs.writeFile(inventoryPath, JSON.stringify(inventory, null, 2));
-    
-    console.log('Inventory updated successfully');
+    try {
+      // Ensure data directory exists
+      const dataDir = path.join(process.cwd(), 'data');
+      try {
+        await fs.mkdir(dataDir, { recursive: true });
+      } catch (mkdirError) {
+        // Directory might already exist
+      }
+      
+      await fs.writeFile(inventoryPath, JSON.stringify(inventory, null, 2));
+      console.log('✅ Inventory updated successfully');
+    } catch (writeError) {
+      console.error('❌ Error writing inventory:', writeError);
+      
+      // If running on Vercel, filesystem writes won't work
+      if (process.env.VERCEL) {
+        return NextResponse.json({
+          success: false,
+          error: 'Filesystem storage not available on Vercel. Please use a database or external storage.',
+          suggestion: 'Consider using Firebase, Supabase, or another cloud database for production.'
+        }, { status: 500 });
+      }
+      
+      throw writeError;
+    }
 
     return NextResponse.json({
       success: true,
@@ -108,9 +155,13 @@ export async function POST(request: NextRequest) {
       product: product
     });
   } catch (error) {
-    console.error('Error updating inventory:', error);
+    console.error('❌ Error updating inventory:', error);
     return NextResponse.json(
-      { error: 'Failed to update inventory' },
+      { 
+        success: false,
+        error: 'Failed to update inventory',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }

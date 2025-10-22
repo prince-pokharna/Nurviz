@@ -1,7 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
 
 // Increase body size limit for image uploads
 export const config = {
@@ -10,9 +7,13 @@ export const config = {
   },
 };
 
+// Check if running on Vercel (read-only filesystem)
+const isVercel = !!process.env.VERCEL;
+
 export async function POST(request: NextRequest) {
   try {
     console.log('📤 Upload API called');
+    console.log('Environment:', isVercel ? 'Vercel (using base64)' : 'Local (using filesystem)');
     
     const formData = await request.formData();
     const files = formData.getAll('files') as File[];
@@ -30,15 +31,6 @@ export async function POST(request: NextRequest) {
 
     const uploadedFiles: string[] = [];
     const timestamp = Date.now();
-    
-    // Ensure upload directory exists
-    const uploadDir = path.join(process.cwd(), 'public', 'images', 'products', category);
-    console.log(`📁 Upload directory: ${uploadDir}`);
-    
-    if (!existsSync(uploadDir)) {
-      console.log('📁 Creating upload directory...');
-      await mkdir(uploadDir, { recursive: true });
-    }
 
     // Process each file
     for (let i = 0; i < files.length; i++) {
@@ -48,7 +40,7 @@ export async function POST(request: NextRequest) {
       
       if (!file.type.startsWith('image/')) {
         console.warn(`⚠️ Skipping non-image file: ${file.name}`);
-        continue; // Skip non-image files
+        continue;
       }
 
       // Check file size (max 10MB)
@@ -58,38 +50,59 @@ export async function POST(request: NextRequest) {
         continue;
       }
 
-      // Generate unique filename with sanitized name
-      const sanitizedName = file.name
-        .toLowerCase()
-        .replace(/[^a-z0-9.-]/g, '-')
-        .replace(/-+/g, '-');
-      const extension = sanitizedName.split('.').pop() || 'jpg';
-      const nameWithoutExt = sanitizedName.replace(`.${extension}`, '').substring(0, 30);
-      const filename = `${nameWithoutExt}-${timestamp}-${i}.${extension}`;
-      const filepath = path.join(uploadDir, filename);
-      
-      console.log(`💾 Saving to: ${filepath}`);
-      
       try {
-        // Convert file to buffer and save
+        // Convert file to buffer
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
-        await writeFile(filepath, buffer);
         
-        // Add to uploaded files list with public path
-        const publicPath = `/images/products/${category}/${filename}`;
-        uploadedFiles.push(publicPath);
-        
-        console.log(`✅ Successfully saved: ${publicPath}`);
+        if (isVercel) {
+          // VERCEL: Convert to base64 data URL (embeddable)
+          const base64 = buffer.toString('base64');
+          const mimeType = file.type;
+          const dataUrl = `data:${mimeType};base64,${base64}`;
+          
+          uploadedFiles.push(dataUrl);
+          console.log(`✅ Converted to base64: ${file.name} (${Math.round(base64.length / 1024)}KB)`);
+        } else {
+          // LOCAL: Save to filesystem
+          const path = require('path');
+          const fs = require('fs/promises');
+          
+          const uploadDir = path.join(process.cwd(), 'public', 'images', 'products', category);
+          
+          // Ensure directory exists
+          try {
+            await fs.mkdir(uploadDir, { recursive: true });
+          } catch (mkdirError) {
+            // Directory might already exist
+          }
+          
+          // Generate filename
+          const sanitizedName = file.name
+            .toLowerCase()
+            .replace(/[^a-z0-9.-]/g, '-')
+            .replace(/-+/g, '-');
+          const extension = sanitizedName.split('.').pop() || 'jpg';
+          const nameWithoutExt = sanitizedName.replace(`.${extension}`, '').substring(0, 30);
+          const filename = `${nameWithoutExt}-${timestamp}-${i}.${extension}`;
+          const filepath = path.join(uploadDir, filename);
+          
+          // Save file
+          await fs.writeFile(filepath, buffer);
+          
+          const publicPath = `/images/products/${category}/${filename}`;
+          uploadedFiles.push(publicPath);
+          console.log(`✅ Saved to filesystem: ${publicPath}`);
+        }
       } catch (fileError) {
-        console.error(`❌ Error saving file ${file.name}:`, fileError);
+        console.error(`❌ Error processing file ${file.name}:`, fileError);
       }
     }
 
     if (uploadedFiles.length === 0) {
       console.error('❌ No files were successfully uploaded');
       return NextResponse.json(
-        { success: false, error: 'No valid image files were uploaded' },
+        { success: false, error: 'No valid image files were uploaded. Please ensure files are under 10MB.' },
         { status: 400 }
       );
     }
@@ -100,7 +113,8 @@ export async function POST(request: NextRequest) {
       success: true,
       message: `Successfully uploaded ${uploadedFiles.length} image(s)`,
       files: uploadedFiles,
-      count: uploadedFiles.length
+      count: uploadedFiles.length,
+      storage: isVercel ? 'base64' : 'filesystem'
     });
 
   } catch (error) {

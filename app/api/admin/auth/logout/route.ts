@@ -8,14 +8,15 @@ export async function POST(request: NextRequest) {
       message: 'Logged out successfully',
     })
     
-    // Clear the admin token cookie
+    // Clear the admin token cookie with proper Vercel configuration
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1'
     response.cookies.set('admin-token', '', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       maxAge: 0, // Expire immediately
       path: '/',
-      domain: process.env.NODE_ENV === 'production' ? undefined : undefined,
+      // Don't set domain for Vercel - let it use the default
     })
     
     return response

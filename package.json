@@ -22,6 +22,8 @@
     "setup-images": "node scripts/setup-image-structure.js",
     "setup-admin": "node scripts/setup-admin-credentials.js",
     "test-env": "node scripts/test-vercel-env.js",
+    "migrate-firebase": "node scripts/migrate-to-firebase.js",
+    "setup-firebase": "npm install && node scripts/migrate-to-firebase.js",
     "setup": "npm install && npm run init-db"
   },
   "dependencies": {
@@ -64,6 +66,8 @@
     "date-fns": "3.6.0",
     "embla-carousel-react": "8.5.1",
     "exceljs": "^4.4.0",
+    "firebase": "^12.2.1",
+    "firebase-admin": "^13.5.0",
     "framer-motion": "latest",
     "input-otp": "1.4.1",
     "jimp": "^1.6.0",

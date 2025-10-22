@@ -41,6 +41,16 @@ export async function POST(request: NextRequest) {
   try {
     const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
     
+    // Log environment check for debugging
+    console.log('Admin login attempt:', {
+      hasAdminEmail: !!process.env.ADMIN_EMAIL,
+      hasAdminPasswordHash: !!process.env.ADMIN_PASSWORD_HASH,
+      hasJwtSecret: !!process.env.JWT_SECRET,
+      nodeEnv: process.env.NODE_ENV,
+      vercel: process.env.VERCEL,
+      timestamp: new Date().toISOString()
+    })
+    
     // Check rate limiting
     if (isRateLimited(ip)) {
       return NextResponse.json(
@@ -64,6 +74,7 @@ export async function POST(request: NextRequest) {
     const admin = await authenticateAdmin(email, password)
     if (!admin) {
       recordLoginAttempt(ip)
+      console.log('Authentication failed for email:', email)
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 }
@@ -86,14 +97,15 @@ export async function POST(request: NextRequest) {
       token,
     })
     
-    // Set secure HTTP-only cookie
+    // Set secure HTTP-only cookie with proper Vercel configuration
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1'
     response.cookies.set('admin-token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       maxAge: 24 * 60 * 60, // 24 hours
       path: '/',
-      domain: process.env.NODE_ENV === 'production' ? undefined : undefined,
+      // Don't set domain for Vercel - let it use the default
     })
     
     return response

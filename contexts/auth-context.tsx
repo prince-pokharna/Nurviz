@@ -100,12 +100,6 @@ const sendOTPEmail = async (email: string, otp: string, type: 'registration' | '
     if (result.success) {
       console.log('✅ Email sent successfully:', result.messageId)
       
-      // In development mode, show the OTP in console for testing
-      if (result.development && result.otp) {
-        console.log('🧪 DEVELOPMENT MODE - OTP for testing:', result.otp)
-        console.log('📧 Email would be sent to:', email)
-        console.log('💡 Use this OTP to verify your account during testing')
-      }
       
       return true
     } else {

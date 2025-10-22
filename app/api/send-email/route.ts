@@ -10,41 +10,22 @@ export async function POST(request: NextRequest) {
 
     // Check if all required credentials are present
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || !process.env.EMAIL_FROM) {
-      console.error('❌ Missing email credentials - using development mode');
-      
-      // In development, simulate successful email sending
-      if (process.env.NODE_ENV === 'development') {
-        console.log('🔧 Development mode: Simulating email send');
-        console.log(`📧 Would send OTP ${otp} to ${to} for ${type}`);
-        
-        // Store OTP in a way that can be retrieved for testing
-        const testOTPData = {
-          email: to,
-          otp: otp,
-          type: type,
-          timestamp: new Date().toISOString()
-        };
-        
-        // In a real scenario, you'd store this in a database
-        // For now, we'll just log it
-        console.log('🧪 Test OTP Data:', testOTPData);
-        
-        return NextResponse.json({
-          success: true,
-          messageId: 'dev-' + Date.now(),
-          message: 'Email sent successfully (development mode)',
-          development: true,
-          otp: otp // Include OTP in response for testing
-        });
-      }
+      console.error('❌ Missing email credentials');
       
       return NextResponse.json({ 
         success: false, 
         error: "Email configuration missing",
-        details: "Please configure email credentials in .env.local file",
+        details: "Please configure email credentials in Vercel environment variables",
+        missingVariables: {
+          EMAIL_USER: !process.env.EMAIL_USER,
+          EMAIL_PASS: !process.env.EMAIL_PASS,
+          EMAIL_FROM: !process.env.EMAIL_FROM
+        },
         setupInstructions: {
-          gmail: "1. Enable 2FA on Gmail\n2. Generate App Password\n3. Set EMAIL_USER and EMAIL_PASS in .env.local",
-          outlook: "1. Use your Outlook credentials\n2. Set EMAIL_USER and EMAIL_PASS in .env.local"
+          step1: "Go to Vercel Dashboard → Settings → Environment Variables",
+          step2: "Add EMAIL_USER, EMAIL_PASS, EMAIL_FROM variables",
+          step3: "For Gmail: Enable 2FA and generate App Password",
+          step4: "Redeploy your project after adding variables"
         }
       }, { status: 500 });
     }

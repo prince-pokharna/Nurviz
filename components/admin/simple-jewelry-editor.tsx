@@ -380,12 +380,14 @@ export default function SimpleJewelryEditor({
                   <Label htmlFor="minimumStock">Minimum Stock Alert</Label>
                   <Input
                     id="minimumStock"
+                    type="number"
+                    min="0"
                     value={formData.inventory?.minimumStock || ''}
                     onChange={(e) => handleInputChange('inventory', {
                       ...formData.inventory,
-                      minimumStock: e.target.value
+                      minimumStock: parseInt(e.target.value) || 0
                     })}
-                    placeholder="e.g., 5 or 'Alert when low'"
+                    placeholder="e.g., 5"
                   />
                 </div>
               </div>

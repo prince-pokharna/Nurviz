@@ -100,12 +100,32 @@ export default function SimpleJewelryEditor({
 
       console.log(`Uploading ${validFiles.length} file(s) to category: ${category}`);
 
-      // Upload images to server
-      const response = await fetch('/api/admin/upload', {
-        method: 'POST',
-        credentials: 'include',
-        body: uploadFormData,
-      });
+      // Try Cloudinary first, fallback to regular upload
+      let response;
+      try {
+        response = await fetch('/api/admin/upload-cloudinary', {
+          method: 'POST',
+          credentials: 'include',
+          body: uploadFormData,
+        });
+        
+        // If Cloudinary fails, try regular upload
+        if (!response.ok) {
+          console.log('Cloudinary upload failed, trying regular upload...');
+          response = await fetch('/api/admin/upload', {
+            method: 'POST',
+            credentials: 'include',
+            body: uploadFormData,
+          });
+        }
+      } catch (cloudinaryError) {
+        console.log('Cloudinary not available, using regular upload');
+        response = await fetch('/api/admin/upload', {
+          method: 'POST',
+          credentials: 'include',
+          body: uploadFormData,
+        });
+      }
 
       if (!response.ok) {
         const errorText = await response.text();

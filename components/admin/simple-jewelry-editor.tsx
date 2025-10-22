@@ -53,12 +53,52 @@ export default function SimpleJewelryEditor({
     try {
       setUploading(true);
       
+      // Validate files before upload
+      const validFiles = Array.from(files).filter(file => {
+        // Check if it's an image
+        if (!file.type.startsWith('image/')) {
+          toast({
+            title: "Invalid File",
+            description: `${file.name} is not an image file`,
+            variant: "destructive",
+          });
+          return false;
+        }
+        
+        // Check file size (max 10MB)
+        const maxSize = 10 * 1024 * 1024;
+        if (file.size > maxSize) {
+          toast({
+            title: "File Too Large",
+            description: `${file.name} exceeds 10MB limit`,
+            variant: "destructive",
+          });
+          return false;
+        }
+        
+        return true;
+      });
+
+      if (validFiles.length === 0) {
+        toast({
+          title: "No Valid Files",
+          description: "Please select valid image files (JPG, PNG, GIF, WebP)",
+          variant: "destructive",
+        });
+        setUploading(false);
+        return;
+      }
+      
       // Create form data for upload
       const uploadFormData = new FormData();
-      Array.from(files).forEach(file => {
+      validFiles.forEach(file => {
         uploadFormData.append('files', file);
       });
-      uploadFormData.append('category', formData.category?.toLowerCase() || 'general');
+      
+      const category = (formData.category || 'general').toLowerCase();
+      uploadFormData.append('category', category);
+
+      console.log(`Uploading ${validFiles.length} file(s) to category: ${category}`);
 
       // Upload images to server
       const response = await fetch('/api/admin/upload', {
@@ -67,9 +107,15 @@ export default function SimpleJewelryEditor({
         body: uploadFormData,
       });
 
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Upload failed:', errorText);
+        throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+      }
+
       const result = await response.json();
 
-      if (result.success) {
+      if (result.success && result.files && result.files.length > 0) {
         // Update form data with uploaded image URLs
         const currentImages = formData.images || [];
         const newImages = [...currentImages, ...result.files];
@@ -82,16 +128,16 @@ export default function SimpleJewelryEditor({
 
         toast({
           title: "✅ Images Uploaded",
-          description: result.message,
+          description: `${result.count} image(s) uploaded successfully!`,
         });
       } else {
-        throw new Error(result.error || 'Upload failed');
+        throw new Error(result.error || result.details || 'Upload failed - no files returned');
       }
     } catch (error) {
       console.error('Upload error:', error);
       toast({
-        title: "❌ Error",
-        description: error instanceof Error ? error.message : "Failed to upload images",
+        title: "❌ Upload Failed",
+        description: error instanceof Error ? error.message : "Failed to upload images. Please try again.",
         variant: "destructive",
       });
     } finally {

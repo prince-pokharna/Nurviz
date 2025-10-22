@@ -213,10 +213,14 @@ export default function SimpleJewelryEditor({
         updatedProduct.id = `${category}-${timestamp}`;
       }
 
-      // Try Firebase product save first (works on Vercel), fallback to simple-update
+      // Try multiple endpoints in order of preference
       let response;
+      let lastError = null;
+      
+      // Try 1: Simple Firebase save (no complex auth needed)
       try {
-        response = await fetch('/api/admin/products-save', {
+        console.log('Trying products-save-simple...');
+        response = await fetch('/api/admin/products-save-simple', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -228,9 +232,40 @@ export default function SimpleJewelryEditor({
           }),
         });
         
-        // If Firebase route doesn't exist or fails, try simple-update
-        if (!response.ok && response.status === 404) {
-          console.log('Firebase route not found, trying simple-update...');
+        if (response.ok) {
+          console.log('✅ Saved via products-save-simple');
+        } else {
+          throw new Error('products-save-simple failed');
+        }
+      } catch (error1) {
+        console.log('products-save-simple failed, trying next...');
+        lastError = error1;
+        
+        // Try 2: Original Firebase save
+        try {
+          console.log('Trying products-save...');
+          response = await fetch('/api/admin/products-save', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              action: isCreating ? 'add_product' : 'update_product',
+              product: updatedProduct
+            }),
+          });
+          
+          if (response.ok) {
+            console.log('✅ Saved via products-save');
+          } else {
+            throw new Error('products-save failed');
+          }
+        } catch (error2) {
+          console.log('products-save failed, trying final fallback...');
+          lastError = error2;
+          
+          // Try 3: Simple update (local file)
           response = await fetch('/api/admin/simple-update', {
             method: 'POST',
             headers: {
@@ -242,20 +277,11 @@ export default function SimpleJewelryEditor({
               product: updatedProduct
             }),
           });
+          
+          if (response.ok) {
+            console.log('✅ Saved via simple-update');
+          }
         }
-      } catch (fetchError) {
-        console.log('Primary save failed, trying fallback...');
-        response = await fetch('/api/admin/simple-update', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            action: isCreating ? 'add_product' : 'update_product',
-            product: updatedProduct
-          }),
-        });
       }
 
       if (response.ok) {

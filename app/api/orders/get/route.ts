@@ -1,83 +1,103 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
-import { OrderData } from '@/lib/order-management';
-import { getOrders } from '@/lib/database';
+import { initializeApp, getApps } from 'firebase/app';
+import { getFirestore, collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 
-const ORDER_DATA_FILE = join(process.cwd(), 'data', 'orders.json');
-
-// Read existing orders
-const readOrders = (): OrderData[] => {
-  if (!existsSync(ORDER_DATA_FILE)) {
-    return [];
-  }
-  try {
-    const data = readFileSync(ORDER_DATA_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error reading orders file:', error);
-    return [];
-  }
+// Firebase config
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyBA6avdbz89WJokX-jQRkp7jg6-kAfetBg",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "nurvi-jewel.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "nurvi-jewel",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "nurvi-jewel.firebasestorage.app",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "1069462383251",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:1069462383251:web:633a8c30a52b673af9fb66",
 };
+
+const app = getApps().length === 0 ? initializeApp(firebaseConfig, 'orders-get-app') : getApps()[0];
+const db = getFirestore(app);
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const orderId = searchParams.get('orderId');
-    const customerPhone = searchParams.get('phone');
-    const customerEmail = searchParams.get('email');
+    const email = searchParams.get('email');
 
-    console.log('=== Getting Order Data ===');
-    console.log('Order ID:', orderId);
-    console.log('Customer Phone:', customerPhone);
-    console.log('Customer Email:', customerEmail);
+    console.log('📦 Fetching orders for:', email || 'all');
 
-    // Use the fallback database system
-    const orders = await getOrders();
-    
-    console.log(`✅ Successfully fetched ${orders.length} orders`);
+    const ordersRef = collection(db, 'orders');
+    let ordersQuery;
 
-    if (orderId) {
-      // Get specific order by ID
-      const order = orders.find((o: OrderData) => o.orderId === orderId);
-      if (!order) {
-        return NextResponse.json({
-          success: false,
-          error: 'Order not found'
-        }, { status: 404 });
-      }
-
-      return NextResponse.json({
-        success: true,
-        order: order
-      });
-    }
-
-    if (customerPhone || customerEmail) {
-      // Get orders by customer phone or email
-      const customerOrders = orders.filter((o: OrderData) => 
-        (customerPhone && o.customerPhone === customerPhone) ||
-        (customerEmail && o.customerEmail === customerEmail)
+    if (email) {
+      // Get orders for specific customer
+      ordersQuery = query(
+        ordersRef,
+        where('customer_email', '==', email),
+        orderBy('created_at', 'desc')
       );
-
-      return NextResponse.json({
-        success: true,
-        orders: customerOrders
-      });
+    } else {
+      // Get all orders (admin)
+      ordersQuery = query(ordersRef, orderBy('created_at', 'desc'));
     }
 
-    // Get all orders (for admin)
+    const snapshot = await getDocs(ordersQuery);
+    const orders = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      // Map Firebase fields to app format
+      orderId: doc.data().order_id,
+      customerName: doc.data().customer_name,
+      customerEmail: doc.data().customer_email,
+      customerPhone: doc.data().customer_phone,
+      totalAmount: doc.data().total_amount,
+      paymentStatus: doc.data().payment_status,
+      orderStatus: doc.data().order_status,
+      orderDate: doc.data().order_date,
+      estimatedDelivery: doc.data().estimated_delivery,
+      createdAt: doc.data().created_at,
+      shippingAddress: doc.data().shipping_address,
+    }));
+
+    console.log(`✅ Found ${orders.length} orders`);
+
     return NextResponse.json({
       success: true,
-      orders: orders
+      orders: orders,
+      count: orders.length
     });
 
   } catch (error) {
-    console.error('❌ Error getting orders:', error);
-    return NextResponse.json({
-      success: false,
-      error: 'Failed to get orders',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 });
+    console.error('❌ Error fetching orders:', error);
+
+    // Fallback to local JSON file
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const ordersFile = path.join(process.cwd(), 'data', 'orders.json');
+      
+      if (fs.existsSync(ordersFile)) {
+        const data = fs.readFileSync(ordersFile, 'utf8');
+        const allOrders = JSON.parse(data);
+        
+        const filtered = email 
+          ? allOrders.filter((o: any) => o.customerEmail === email)
+          : allOrders;
+
+        return NextResponse.json({
+          success: true,
+          orders: filtered,
+          count: filtered.length,
+          source: 'local-fallback'
+        });
+      }
+    } catch (fallbackError) {
+      console.error('Fallback also failed:', fallbackError);
+    }
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Failed to fetch orders',
+        orders: []
+      },
+      { status: 500 }
+    );
   }
-} 
+}

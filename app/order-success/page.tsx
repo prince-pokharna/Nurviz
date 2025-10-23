@@ -77,7 +77,7 @@ export default function OrderSuccessPage() {
 
               <div className="flex items-center justify-center space-x-2 text-sm text-gray-600">
                 <Package className="w-4 h-4" />
-                <span>Expected delivery: 7-10 working days</span>
+                <span>Expected delivery: 5-9 business days</span>
               </div>
             </motion.div>
 
@@ -91,9 +91,9 @@ export default function OrderSuccessPage() {
                 asChild 
                 className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
-                <Link href="/orders">
-                  <Package className="w-4 h-4 mr-2" />
-                  Track Your Order
+                <Link href="/contact">
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Contact Support
                 </Link>
               </Button>
 

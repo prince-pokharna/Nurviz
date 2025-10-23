@@ -43,9 +43,9 @@ export default function CheckoutPage() {
   })
 
   const subtotal = state.total
-  const shipping = subtotal > 50000 ? 0 : 500
-  const tax = Math.round(subtotal * 0.18)
-  const total = subtotal + shipping + tax
+  const shipping = 90 // Flat ₹90 shipping charge
+  const tax = 0 // No GST charged
+  const total = subtotal + shipping
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -166,13 +166,28 @@ export default function CheckoutPage() {
                   paymentStatus: 'completed'
                 };
 
-                await fetch("/api/orders/save", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(orderData),
-                });
-
-                console.log('✓ Order data saved successfully');
+                // Try Firebase save first, fallback to regular save
+                try {
+                  const saveResponse = await fetch("/api/orders/save-firebase", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(orderData),
+                  });
+                  
+                  if (!saveResponse.ok) {
+                    // Fallback to regular save
+                    await fetch("/api/orders/save", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify(orderData),
+                    });
+                  }
+                  
+                  console.log('✓ Order data saved successfully');
+                } catch (saveErr) {
+                  console.error('All save attempts failed:', saveErr);
+                  // Continue anyway - at least payment is verified
+                }
               } catch (saveError) {
                 console.error("Order saving failed:", saveError);
                 // Don't fail the entire flow if order saving fails
@@ -185,7 +200,7 @@ export default function CheckoutPage() {
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
                     to: formData.phone,
-                    message: `Dear ${formData.firstName}, your order #${order.id} for ₹${total.toLocaleString()} has been confirmed! Thank you for shopping with Nurvi Jewels. Expected delivery: 7-10 working days. Track your order at nurvijewels.com/orders`,
+                    message: `Dear ${formData.firstName}, your order #${order.id} for ₹${total.toLocaleString()} has been confirmed! Thank you for shopping with Nurvi Jewels. Expected delivery: 5-9 business days. For support: contact@nurvijewels.com`,
                   }),
                 })
                 console.log('✓ SMS confirmation sent');
@@ -460,9 +475,9 @@ export default function CheckoutPage() {
                           <span>Shipping</span>
                           <span>{shipping === 0 ? "Free" : `₹${shipping.toLocaleString()}`}</span>
                         </div>
-                        <div className="flex justify-between">
-                          <span>GST (18%)</span>
-                          <span>₹{tax.toLocaleString()}</span>
+                        <div className="flex justify-between text-sm text-gray-500">
+                          <span>GST</span>
+                          <span>Included</span>
                         </div>
                         <Separator />
                         <div className="flex justify-between text-xl font-bold">
@@ -511,9 +526,7 @@ export default function CheckoutPage() {
                           </div>
                           <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
                             <Truck className="w-4 h-4 text-blue-500" />
-                            <span>
-                              {shipping === 0 ? "Free shipping on this order" : "Standard shipping: 3-5 business days"}
-                            </span>
+                          <span>Standard shipping: 5-9 business days</span>
                           </div>
                         </div>
                       </div>

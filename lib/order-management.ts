@@ -63,13 +63,13 @@ export const createExcelOrderData = (orderData: OrderData) => {
   };
 };
 
-// Calculate estimated delivery date (7-10 working days)
+// Calculate estimated delivery date (5-9 business days)
 export const calculateEstimatedDelivery = (orderDate: Date): string => {
   const deliveryDate = new Date(orderDate);
   let workingDays = 0;
   
-  // Add 7-10 working days (using 8 as average)
-  while (workingDays < 8) {
+  // Add 5-9 business days (using 7 as average)
+  while (workingDays < 7) {
     deliveryDate.setDate(deliveryDate.getDate() + 1);
     const dayOfWeek = deliveryDate.getDay();
     

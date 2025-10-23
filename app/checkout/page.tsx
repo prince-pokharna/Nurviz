@@ -93,7 +93,19 @@ export default function CheckoutPage() {
       }
 
       // Step 2: Initialize Razorpay checkout
-      const razorpayKeyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+      // Fetch the public key from API (runtime, not build time)
+      let razorpayKeyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+      
+      // If not available in build, fetch from API
+      if (!razorpayKeyId || razorpayKeyId === 'undefined') {
+        try {
+          const configResponse = await fetch('/api/razorpay/config');
+          const configData = await configResponse.json();
+          razorpayKeyId = configData.keyId;
+        } catch (error) {
+          console.error('Failed to fetch Razorpay config:', error);
+        }
+      }
       
       if (!razorpayKeyId) {
         console.error('❌ Razorpay configuration missing');
@@ -102,8 +114,11 @@ export default function CheckoutPage() {
           description: "Payment system is not configured. Please contact support.",
           variant: "destructive",
         });
+        setIsProcessing(false);
         return;
       }
+      
+      console.log('✅ Razorpay Key ID loaded:', razorpayKeyId.substring(0, 15) + '...');
       
       const options = {
         key: razorpayKeyId,

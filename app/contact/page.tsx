@@ -281,7 +281,7 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* Map Section */}
+        {/* Interactive Map Section */}
         <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
@@ -291,12 +291,33 @@ export default function ContactPage() {
               </p>
             </div>
 
-            <div className="bg-gray-300 rounded-lg h-96 flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="h-16 w-16 text-gray-500 mx-auto mb-4" />
-                <p className="text-gray-600">Interactive map would be integrated here</p>
-                <p className="text-sm text-gray-500 mt-2">1-A-37, R.C. Vyas Colony, Bhilwara</p>
-              </div>
+            <div className="rounded-lg overflow-hidden shadow-xl">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3590.1234567890!2d74.63!3d25.35!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjXCsDIxJzAwLjAiTiA3NMKwMzcnNDguMCJF!5e0!3m2!1sen!2sin!4v1234567890"
+                width="100%"
+                height="450"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Nurvi Jewel Store Location - 1-A-37, R.C. Vyas Colony, Bhilwara, Rajasthan"
+                className="w-full"
+              />
+            </div>
+            
+            <div className="mt-6 text-center">
+              <p className="text-gray-600 mb-3">
+                <MapPin className="inline h-5 w-5 text-amber-600 mr-2" />
+                <strong>Address:</strong> 1-A-37, R.C. Vyas Colony, Bhilwara, Rajasthan 311001
+              </p>
+              <a 
+                href="https://maps.google.com/?q=1-A-37,R.C.Vyas+Colony,Bhilwara,Rajasthan+311001"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-6 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+              >
+                Open in Google Maps
+              </a>
             </div>
           </div>
         </section>

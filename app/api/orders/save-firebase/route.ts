@@ -54,6 +54,34 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ Order saved to Firebase with ID:', docRef.id);
 
+    // Send order confirmation email (async, don't wait)
+    try {
+      const emailData = {
+        to: orderData.customerEmail,
+        customerName: orderData.customerName,
+        orderId: orderData.orderId || `ORD-${Date.now()}`,
+        totalAmount: orderData.totalAmount,
+        items: orderData.items,
+        shippingAddress: orderData.shippingAddress,
+        estimatedDelivery: estimatedDelivery,
+        orderDate: new Date().toLocaleDateString('en-IN')
+      };
+
+      fetch(`${request.nextUrl.origin}/api/send-order-confirmation`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(emailData)
+      }).then(res => {
+        if (res.ok) {
+          console.log('✅ Order confirmation email sent');
+        } else {
+          console.warn('⚠️ Email sending failed (non-critical)');
+        }
+      }).catch(err => console.warn('Email error:', err));
+    } catch (emailError) {
+      console.warn('Email sending failed (non-critical):', emailError);
+    }
+
     // Also trigger Excel update (async, don't wait)
     try {
       fetch('/api/admin/order-book?action=generate', { method: 'GET' }).catch(console.error);

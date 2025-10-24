@@ -75,8 +75,8 @@ export default function ContactPage() {
               <div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-6 font-playfair">Get in Touch</h2>
                 <p className="text-lg text-gray-600 leading-relaxed mb-8">
-                  Whether you're looking for the perfect piece for a special occasion, need help with sizing, or want to
-                  learn more about our custom design services, our team is ready to assist you.
+                Whether you’re searching for a timeless statement piece or a touch of everyday elegance, 
+                our team is here to help you find jewellery that feels uniquely yours.
                 </p>
               </div>
 
@@ -88,9 +88,9 @@ export default function ContactPage() {
                     </div>
                     <h3 className="font-semibold text-gray-900 mb-2">Visit Our Store</h3>
                     <p className="text-gray-600 text-sm">
-                      123 Jewelry Street, Zaveri Bazaar
+                      1-A-37, R.C. Vyas Colony
                       <br />
-                      Mumbai, Maharashtra 400002
+                      Bhilwara, Rajasthan 311001
                     </p>
                   </CardContent>
                 </Card>
@@ -102,7 +102,7 @@ export default function ContactPage() {
                     </div>
                     <h3 className="font-semibold text-gray-900 mb-2">Call Us</h3>
                     <p className="text-gray-600 text-sm">
-                      +91 98765 43210
+                      +91 7728031450
                       <br />
                       Mon-Sat 10AM-8PM
                     </p>
@@ -116,9 +116,9 @@ export default function ContactPage() {
                     </div>
                     <h3 className="font-semibold text-gray-900 mb-2">Email Us</h3>
                     <p className="text-gray-600 text-sm">
-                      info@nurvijewel.com
+                      jewel.nurvi@gmail.com
                       <br />
-                      support@nurvijewel.com
+                      jsonali0608@gmail.com
                     </p>
                   </CardContent>
                 </Card>
@@ -132,7 +132,7 @@ export default function ContactPage() {
                     <p className="text-gray-600 text-sm">
                       Mon-Fri: 10AM-8PM
                       <br />
-                      Sat-Sun: 10AM-7PM
+                      Sat-Sun: 10AM-5PM
                     </p>
                   </CardContent>
                 </Card>
@@ -287,7 +287,7 @@ export default function ContactPage() {
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 mb-4 font-playfair">Find Our Store</h2>
               <p className="text-lg text-gray-600">
-                Visit our flagship store in the heart of Mumbai's jewelry district.
+                Visit our flagship store in the heart of Bhilwara's jewelry district.
               </p>
             </div>
 
@@ -295,7 +295,7 @@ export default function ContactPage() {
               <div className="text-center">
                 <MapPin className="h-16 w-16 text-gray-500 mx-auto mb-4" />
                 <p className="text-gray-600">Interactive map would be integrated here</p>
-                <p className="text-sm text-gray-500 mt-2">123 Jewelry Street, Zaveri Bazaar, Mumbai</p>
+                <p className="text-sm text-gray-500 mt-2">1-A-37, R.C. Vyas Colony, Bhilwara</p>
               </div>
             </div>
           </div>

@@ -221,7 +221,7 @@ export default function AboutPage() {
                 <div className="text-gray-600 font-medium">Years of Excellence</div>
               </div>
               <div className="space-y-2">
-                <div className="text-4xl lg:text-5xl font-bold gradient-text font-playfair">10,000+</div>
+                <div className="text-4xl lg:text-5xl font-bold gradient-text font-playfair">1,000+</div>
                 <div className="text-gray-600 font-medium">Happy Customers</div>
               </div>
               <div className="space-y-2">
@@ -229,7 +229,7 @@ export default function AboutPage() {
                 <div className="text-gray-600 font-medium">Unique Designs</div>
               </div>
               <div className="space-y-2">
-                <div className="text-4xl lg:text-5xl font-bold gradient-text font-playfair">50+</div>
+                <div className="text-4xl lg:text-5xl font-bold gradient-text font-playfair">10+</div>
                 <div className="text-gray-600 font-medium">Master Artisans</div>
               </div>
             </div>

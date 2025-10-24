@@ -71,6 +71,10 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
     setItems(prevItems => {
       // Check if item already exists
       if (prevItems.some(existingItem => existingItem.id === item.id)) {
+        toast({
+          title: "Already in wishlist! ❤️",
+          description: `${item.name} is already in your wishlist.`,
+        })
         return prevItems
       }
       
@@ -120,6 +124,16 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
       description: "All items have been removed from your wishlist.",
     })
   }
+
+  // Clear wishlist when user logs out (if needed)
+  useEffect(() => {
+    const handleLogout = () => {
+      setItems([])
+    }
+    
+    window.addEventListener('userLogout', handleLogout)
+    return () => window.removeEventListener('userLogout', handleLogout)
+  }, [])
 
   const contextValue: WishlistContextType = {
     items,

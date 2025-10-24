@@ -21,7 +21,7 @@ export default function Hero() {
     {
       title: "Trending Designs",
       subtitle: "Perfect for Content Creation & Photoshoots",
-      description: "Jewelry that maintains its shine and beauty, ideal for influencers and content creators",
+      description: "Jewelry that maintains its shine and beauty, ideal for the generations of women",
       image: "/placeholder.svg?height=600&width=800",
       cta: "Explore Trends",
       link: "/collections?category=trending",
@@ -154,11 +154,11 @@ export default function Hero() {
               className="grid grid-cols-3 gap-8 pt-8 border-t border-luxury-200"
             >
               <div className="text-center">
-                <div className="text-2xl font-bold text-luxury-800">15+</div>
+                <div className="text-2xl font-bold text-luxury-800">2+</div>
                 <div className="text-sm text-luxury-600">Years Experience</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-luxury-800">10K+</div>
+                <div className="text-2xl font-bold text-luxury-800">1K+</div>
                 <div className="text-sm text-luxury-600">Happy Customers</div>
               </div>
               <div className="text-center">

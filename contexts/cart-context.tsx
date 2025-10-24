@@ -86,14 +86,29 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   })
 
   useEffect(() => {
-    const savedCart = localStorage.getItem("nurvi-cart")
-    if (savedCart) {
-      dispatch({ type: "LOAD_CART", payload: JSON.parse(savedCart) })
+    if (typeof window !== 'undefined') {
+      const savedCart = localStorage.getItem("nurvi-cart")
+      if (savedCart) {
+        try {
+          const parsedCart = JSON.parse(savedCart)
+          dispatch({ type: "LOAD_CART", payload: parsedCart })
+        } catch (error) {
+          console.error('Error parsing cart:', error)
+          // Clear corrupted cart data
+          localStorage.removeItem("nurvi-cart")
+        }
+      }
     }
   }, [])
 
   useEffect(() => {
-    localStorage.setItem("nurvi-cart", JSON.stringify(state))
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("nurvi-cart", JSON.stringify(state))
+      // Dispatch custom event to notify other components
+      window.dispatchEvent(new CustomEvent('cartUpdated', { 
+        detail: { count: state.itemCount, total: state.total } 
+      }))
+    }
   }, [state])
 
   const addItem = (item: Omit<CartItem, "quantity"> & { quantity?: number }) => {

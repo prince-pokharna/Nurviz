@@ -390,13 +390,16 @@ export default function CollectionsPage() {
         </div>
       </main>
 
-      <Dialog open={isQuickViewOpen} onOpenChange={setIsQuickViewOpen}>
-        <DialogContent className="sm:max-w-[900px] p-0">
-          {quickViewProduct && (
-            <ProductQuickView product={quickViewProduct} isOpen={isQuickViewOpen} onClose={() => setIsQuickViewOpen(false)} />
-          )}
-        </DialogContent>
-      </Dialog>
+      {quickViewProduct && (
+        <ProductQuickView 
+          product={quickViewProduct} 
+          isOpen={isQuickViewOpen} 
+          onClose={() => {
+            setIsQuickViewOpen(false)
+            setQuickViewProduct(null)
+          }} 
+        />
+      )}
 
       <Footer />
     </div>
